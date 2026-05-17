@@ -1,0 +1,168 @@
+/* ==========================================================================
+   DASHBOARD PAGES GRID LAYOUT
+   ========================================================================== */
+
+/* 1. Main Dashboard Grid Layout */
+.dashboard-grid-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* 2. Timeline Activities Component */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 4px;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--border-color);
+}
+
+.timeline-item {
+  position: relative;
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 4px;
+  left: -20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: 2px solid var(--light-color);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.timeline-item.dot-success .timeline-dot { background-color: var(--success-color); box-shadow: 0 0 0 2px var(--success-light); }
+.timeline-item.dot-warning .timeline-dot { background-color: var(--warning-color); box-shadow: 0 0 0 2px var(--warning-light); }
+.timeline-item.dot-danger .timeline-dot { background-color: var(--danger-color); box-shadow: 0 0 0 2px var(--danger-light); }
+.timeline-item.dot-info .timeline-dot { background-color: var(--info-color); box-shadow: 0 0 0 2px var(--info-light); }
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.timeline-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--dark-color);
+}
+
+.timeline-desc {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+}
+
+.timeline-time {
+  font-size: 0.72rem;
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+/* 3. Book Cover Lists for Best Sellers */
+.best-seller-book {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.best-seller-cover {
+  width: 44px;
+  height: 60px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.best-seller-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.best-seller-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--dark-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.best-seller-author {
+  font-size: 0.78rem;
+  color: var(--secondary-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.best-seller-sales {
+  font-size: 0.78rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* 4. Custom Low Stock Alerts in Dashboard */
+.stock-alert-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: var(--warning-light);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--border-radius-sm);
+  color: #78350f;
+  margin-bottom: 0.5rem;
+}
+
+.stock-alert-item:last-child {
+  margin-bottom: 0;
+}
+
+.stock-alert-item.out-of-stock {
+  background-color: var(--danger-light);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #7f1d1d;
+}
+
+.stock-alert-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stock-alert-qty {
+  font-weight: 800;
+}

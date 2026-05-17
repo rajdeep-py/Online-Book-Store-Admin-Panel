@@ -1,0 +1,212 @@
+/* ==========================================================================
+   REUSABLE PREMIUM FORM AND FIELDSET SYSTEM
+   ========================================================================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.form-label span.required-star {
+  color: var(--danger-color);
+  margin-left: 0.15rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  outline: none;
+  font-size: 0.9rem;
+  color: var(--dark-color);
+  transition: all var(--transition-fast);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.form-control::placeholder {
+  color: var(--secondary-color);
+  opacity: 0.6;
+}
+
+.form-control:disabled {
+  background-color: var(--secondary-light);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ==========================================================================
+   FORM VALIDATION FEEDBACKS
+   ========================================================================== */
+.form-control.input-error {
+  border-color: var(--danger-color) !important;
+}
+
+.form-control.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+
+.error-feedback {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--danger-color);
+  margin-top: 0.15rem;
+  display: block;
+}
+
+/* Custom Checkbox/Switch options */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-control {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+/* ==========================================================================
+   IMAGE UPLOAD PREVIEW LAYOUTS
+   ========================================================================== */
+.image-upload-wrapper {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  background-color: var(--bg-color);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image-upload-wrapper:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(99, 102, 241, 0.02);
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: var(--secondary-color);
+}
+
+.upload-text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--secondary-color);
+}
+
+.upload-text strong {
+  color: var(--primary-color);
+}
+
+.image-preview-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-preview-box {
+  width: 80px;
+  height: 100px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  object-fit: cover;
+  background-color: var(--secondary-light);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   ADMIN LOGIN CARD AND VIEW
+   ========================================================================== */
+.login-body {
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+}
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.login-logo {
+  width: 48px;
+  height: 48px;
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.login-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--dark-color);
+  margin-top: 0.5rem;
+}
+
+.login-subtitle {
+  font-size: 0.88rem;
+  color: var(--secondary-color);
+}

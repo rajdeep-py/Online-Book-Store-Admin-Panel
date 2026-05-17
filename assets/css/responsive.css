@@ -1,0 +1,138 @@
+/* ==========================================================================
+   RESPONSIVE LAYOUTS & DEVICE BREAKPOINTS
+   ========================================================================== */
+
+/* 1. Large Screen Adjustments (max-width: 1200px) */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard-grid-1,
+  .dashboard-grid-2,
+  .dashboard-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 2. Tablet Screen Adjustments (max-width: 992px) */
+@media (max-width: 992px) {
+  /* Sidebar Overlay transitions */
+  .sidebar {
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .sidebar.mobile-active {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+  }
+  
+  body.sidebar-collapsed .main-content {
+    margin-left: 0;
+  }
+  
+  .navbar {
+    padding-left: 2rem !important;
+  }
+  
+  .navbar-mobile-toggle {
+    display: block; /* Mobile hambuger button visible */
+  }
+  
+  .sidebar-toggle {
+    display: none; /* Hide collapse sidebar arrow on tablets */
+  }
+
+  .analytics-metric-summary {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* 3. Small Mobile Screen Adjustments (max-width: 768px) */
+@media (max-width: 768px) {
+  .content-body {
+    padding: 1.25rem;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .page-header .btn {
+    width: 100%; /* Buttons fill screen on mobiles */
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* Stacking form inputs */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+  
+  .table-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-bar-left {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 100%;
+  }
+  
+  .table-search-wrapper {
+    max-width: 100%;
+  }
+  
+  .table-filter-select {
+    width: 100%;
+  }
+  
+  .filter-bar-right {
+    justify-content: flex-end;
+    width: 100%;
+  }
+  
+  /* Navbar widgets stacking */
+  .navbar-search {
+    display: none; /* Hide search input on header for small displays */
+  }
+  
+  .nav-profile-name {
+    display: none; /* Hide profile name, show avatar only */
+  }
+  
+  .main-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+}
+
+/* 4. Ultra-thin Breakpoint (max-width: 480px) */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .page-title-block h1 {
+    font-size: 1.5rem;
+  }
+}

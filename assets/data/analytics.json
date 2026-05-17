@@ -1,0 +1,128 @@
+{
+  "totalRevenue": 3360.82,
+  "salesByMonth": [
+    {
+      "month": "Dec",
+      "revenue": 7850.4,
+      "orders": 198
+    },
+    {
+      "month": "Jan",
+      "revenue": 9230.15,
+      "orders": 220
+    },
+    {
+      "month": "Feb",
+      "revenue": 8400.9,
+      "orders": 205
+    },
+    {
+      "month": "Mar",
+      "revenue": 11450.6,
+      "orders": 280
+    },
+    {
+      "month": "Apr",
+      "revenue": 13900.2,
+      "orders": 310
+    },
+    {
+      "month": "May",
+      "revenue": 15640.85,
+      "orders": 365
+    }
+  ],
+  "orderStatusDistribution": {
+    "Pending": 4,
+    "Confirmed": 2,
+    "Dispatched": 4,
+    "Delivered": 38,
+    "Cancelled": 2
+  },
+  "categoriesChartData": [
+    {
+      "category": "Business",
+      "sales": 289.43
+    },
+    {
+      "category": "Fiction",
+      "sales": 255.93
+    },
+    {
+      "category": "Technology",
+      "sales": 859.79
+    },
+    {
+      "category": "Mystery",
+      "sales": 296.35
+    },
+    {
+      "category": "Non-Fiction",
+      "sales": 483.78
+    },
+    {
+      "category": "Self-Help",
+      "sales": 380.16
+    },
+    {
+      "category": "Biography",
+      "sales": 606.91
+    },
+    {
+      "category": "Sci-Fi",
+      "sales": 188.47
+    }
+  ],
+  "bestSellers": [
+    {
+      "bookId": "BOK-020",
+      "title": "You Don't Know JS Yet",
+      "author": "Kyle Simpson",
+      "category": "Technology",
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&q=80",
+      "price": 29.99,
+      "salesCount": 13,
+      "totalRevenue": 389.87
+    },
+    {
+      "bookId": "BOK-008",
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "category": "Non-Fiction",
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&q=80",
+      "price": 24.99,
+      "salesCount": 12,
+      "totalRevenue": 299.88
+    },
+    {
+      "bookId": "BOK-024",
+      "title": "Elon Musk",
+      "author": "Walter Isaacson",
+      "category": "Biography",
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&q=80",
+      "price": 25,
+      "salesCount": 10,
+      "totalRevenue": 250
+    },
+    {
+      "bookId": "BOK-017",
+      "title": "Shoe Dog",
+      "author": "Phil Knight",
+      "category": "Biography",
+      "cover": "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&q=80",
+      "price": 16.99,
+      "salesCount": 9,
+      "totalRevenue": 152.91
+    },
+    {
+      "bookId": "BOK-016",
+      "title": "Thinking, Fast and Slow",
+      "author": "Daniel Kahneman",
+      "category": "Non-Fiction",
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&q=80",
+      "price": 18.99,
+      "salesCount": 8,
+      "totalRevenue": 151.92
+    }
+  ]
+}

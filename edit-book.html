@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Book Title - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Modify Book Catalog Details</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item"><a href="books.html">Books</a></li>
+              <li class="breadcrumb-item active">Edit Book</li>
+            </ul>
+          </div>
+          <div class="page-actions-block">
+            <a href="books.html" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Back to Catalog
+            </a>
+          </div>
+        </div>
+
+        <!-- Edit Book Grid Form Panel Split -->
+        <div class="card p-4">
+          <form id="edit-book-form" novalidate>
+            
+            <div class="d-grid gap-4" style="grid-template-columns: 2fr 1fr; align-items: start;">
+              
+              <!-- Left Form fields column -->
+              <div class="form-grid">
+                
+                <!-- Book Title -->
+                <div class="form-group full-width">
+                  <label for="book-title" class="form-label">Book Title <span class="required-star">*</span></label>
+                  <input type="text" id="book-title" class="form-control" placeholder="e.g. The Great Gatsby" required minlength="3">
+                </div>
+
+                <!-- Author -->
+                <div class="form-group">
+                  <label for="book-author" class="form-label">Author Name <span class="required-star">*</span></label>
+                  <input type="text" id="book-author" class="form-control" placeholder="e.g. F. Scott Fitzgerald" required>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                  <label for="book-category" class="form-label">Category / Genre <span class="required-star">*</span></label>
+                  <select id="book-category" class="form-control" required>
+                    <option value="">Select Category</option>
+                    <!-- Loaded dynamically by JS -->
+                  </select>
+                </div>
+
+                <!-- Unit Price -->
+                <div class="form-group">
+                  <label for="book-price" class="form-label">Unit Price ($) <span class="required-star">*</span></label>
+                  <input type="number" id="book-price" class="form-control" placeholder="e.g. 14.99" min="0.01" step="0.01" required>
+                </div>
+
+                <!-- Stock Qty -->
+                <div class="form-group">
+                  <label for="book-stock" class="form-label">Stock Quantity <span class="required-star">*</span></label>
+                  <input type="number" id="book-stock" class="form-control" placeholder="e.g. 50" min="0" required>
+                </div>
+
+                <!-- ISBN -->
+                <div class="form-group">
+                  <label for="book-isbn" class="form-label">ISBN Code <span class="required-star">*</span></label>
+                  <input type="text" id="book-isbn" class="form-control" placeholder="e.g. 978-3-16-148410-0" required>
+                </div>
+
+                <!-- Publisher -->
+                <div class="form-group">
+                  <label for="book-publisher" class="form-label">Publisher</label>
+                  <input type="text" id="book-publisher" class="form-control" placeholder="e.g. Penguin Books">
+                </div>
+
+                <!-- Publish Date -->
+                <div class="form-group">
+                  <label for="book-publish-date" class="form-label">Publication Date</label>
+                  <input type="date" id="book-publish-date" class="form-control">
+                </div>
+
+                <!-- Cover URL -->
+                <div class="form-group">
+                  <label for="book-cover-url" class="form-label">Cover Image URL <span class="required-star">*</span></label>
+                  <input type="url" id="book-cover-url" class="form-control" placeholder="e.g. https://images.unsplash.com/..." required>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group full-width">
+                  <label for="book-desc" class="form-label">Book Summary / Description <span class="required-star">*</span></label>
+                  <textarea id="book-desc" class="form-control" placeholder="Provide a compelling synopsis of the book..." required minlength="10"></textarea>
+                </div>
+
+              </div>
+
+              <!-- Right Image cover preview column -->
+              <div class="card bg-secondary-light text-center p-4 m-0" style="border: 1px solid var(--border-color); sticky: top 20px;">
+                <h4 style="font-family:'Outfit', sans-serif; font-weight:700; color:var(--dark-color); margin-bottom:1rem;">Book Cover Preview</h4>
+                <div class="d-flex flex-column align-items-center gap-3">
+                  <!-- Cover Image wrapper -->
+                  <img id="cover-preview-img" src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&q=80" alt="Book Cover Preview" style="width: 140px; height: 200px; border-radius: 6px; object-fit: cover; box-shadow: var(--shadow-md); background-color:var(--light-color);">
+                  <p class="text-muted" style="font-size:0.78rem; line-height: 1.4;">Changes in Cover Image URL dynamically update this preview panel.</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Submit action block -->
+            <div class="mt-4 p-3 d-flex justify-content-end gap-2" style="border-top:1px solid var(--border-color);">
+              <a href="books.html" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check"></i> Save Catalog Changes
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- core scripts -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/validation.js"></script>
+  
+  <!-- books controller script -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/books.js"></script>
+</body>
+</html>

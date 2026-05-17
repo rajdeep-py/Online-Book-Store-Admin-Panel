@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Analytics & Reports - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/charts.css">
+  <link rel="stylesheet" href="assets/css/analytics.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Drawer Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Sales Performance Analytics</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Analytics</li>
+            </ul>
+          </div>
+          <div class="page-actions-block">
+            <button class="btn btn-primary" id="export-pdf-analytics-btn">
+              <i class="fas fa-file-pdf"></i> Download PDF Summary
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Executive Analytics Summary Panels -->
+        <div class="analytics-metric-summary">
+          
+          <!-- Total Revenue -->
+          <div class="analytics-metric-box fade-in">
+            <span class="analytics-metric-label">Gross Bookstore Revenue</span>
+            <span class="analytics-metric-value" id="analytic-revenue">$0.00</span>
+            <span class="analytics-metric-footer"><i class="fas fa-arrow-up trend-up mr-1"></i> +14.2% vs last month</span>
+          </div>
+
+          <!-- Average Invoice Valuation -->
+          <div class="analytics-metric-box fade-in">
+            <span class="analytics-metric-label">Average Order Value</span>
+            <span class="analytics-metric-value" id="analytic-average-order">$0.00</span>
+            <span class="analytics-metric-footer"><i class="fas fa-arrow-up trend-up mr-1"></i> +4.5% average cart sizing</span>
+          </div>
+
+          <!-- Total Shipped Orders -->
+          <div class="analytics-metric-box fade-in">
+            <span class="analytics-metric-label">Completed Shipments</span>
+            <span class="analytics-metric-value" id="analytic-delivered-count">0</span>
+            <span class="analytics-metric-footer">Delivered order logs counts</span>
+          </div>
+
+          <!-- Active Catalog Volumes -->
+          <div class="analytics-metric-box fade-in">
+            <span class="analytics-metric-label">Active Catalog Volumes</span>
+            <span class="analytics-metric-value" id="analytic-active-books">0</span>
+            <span class="analytics-metric-footer">Active books volumes cataloged</span>
+          </div>
+
+        </div>
+
+        <!-- Primary Revenue Trend Area Chart -->
+        <div class="card p-4">
+          <div class="card-header m-0 mb-4">
+            <h3 class="card-title">Gross Monthly Revenue Performance ($)</h3>
+          </div>
+          <div class="card-body">
+            <div class="chart-container-lg">
+              <canvas id="analytics-sales-line-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Charts Split Grid (Bar Chart / Doughnut Chart) -->
+        <div class="dashboard-grid-1">
+          
+          <!-- Category sales bar chart -->
+          <div class="card p-4">
+            <div class="card-header m-0 mb-4">
+              <h3 class="card-title">Sales Revenue by Genre Category ($)</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="analytics-categories-bar-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Status distribution pie chart -->
+          <div class="card p-4">
+            <div class="card-header m-0 mb-4">
+              <h3 class="card-title">Order Status Share (%)</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="analytics-statuses-pie-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Lower Details Grid Split: Bestsellers vs Progress sales -->
+        <div class="dashboard-grid-1">
+          
+          <!-- Bestselling Books Detailed Table grid -->
+          <div class="card p-4">
+            <div class="card-header m-0 mb-4">
+              <h3 class="card-title"><i class="fas fa-crown text-warning"></i> Bookstore Bestseller Titles</h3>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive" style="border: none;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Book details</th>
+                      <th>Genre</th>
+                      <th>Unit Price</th>
+                      <th>Sales count</th>
+                      <th>Total Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analytics-bestsellers-list">
+                    <!-- Dynamic rendering by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre Category sales progression listings -->
+          <div class="card p-4">
+            <div class="card-header m-0 mb-4">
+              <h3 class="card-title">Genre Segment Performance</h3>
+            </div>
+            <div class="card-body">
+              <div class="category-progress-list" id="analytics-categories-bar-list">
+                <!-- Dynamic progress bars -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- core framework components -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  
+  <!-- charts initializers and analytics controller scripts -->
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/analytics.js"></script>
+</body>
+</html>

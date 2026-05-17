@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Customers - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Customer Management</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Customers</li>
+            </ul>
+          </div>
+          <div class="page-actions-block">
+            <button class="btn btn-primary" id="export-customers-btn">
+              <i class="fas fa-download"></i> Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Central Customers Card Data-Table -->
+        <div class="card p-4">
+          
+          <!-- Table Action Filters Header (Search, Filters select) -->
+          <div class="table-filter-bar">
+            
+            <div class="filter-bar-left">
+              <!-- Inline Text Search -->
+              <div class="table-search-wrapper">
+                <i class="fas fa-search table-search-icon"></i>
+                <input type="text" placeholder="Search by name or email..." class="table-search-input" id="customer-search">
+              </div>
+              
+              <!-- Dropdown Select Status Filter -->
+              <select class="table-filter-select" id="customer-filter-status">
+                <option value="all">All Statuses</option>
+                <option value="active">Active Only</option>
+                <option value="suspended">Suspended Only</option>
+              </select>
+            </div>
+            
+            <div class="filter-bar-right">
+              <span class="text-muted" style="font-size: 0.85rem; font-weight: 500;">
+                <i class="fas fa-filter"></i> Search results update dynamically
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Renders Customer Table component outline -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Customer ID</th>
+                  <th>Customer Details</th>
+                  <th>Contact Phone</th>
+                  <th>Orders Count</th>
+                  <th>Total Spent</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customers-table-body">
+                <!-- Populated by assets/js/customers.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Customer Pagination Controls bar -->
+          <div class="table-pagination-bar">
+            <span class="pagination-info" id="pagination-info-label">Showing 1 to 8 of 20 customers</span>
+            <ul class="pagination-controls">
+              <li><button class="page-btn" id="pag-prev" disabled><i class="fas fa-chevron-left"></i> Previous</button></li>
+              <li><button class="page-btn" id="pag-next">Next <i class="fas fa-chevron-right"></i></button></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- core framework components -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  
+  <!-- customer specific initializers and route controller scripts -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/customers.js"></script>
+</body>
+</html>

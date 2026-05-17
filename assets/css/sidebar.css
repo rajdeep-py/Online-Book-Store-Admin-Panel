@@ -1,0 +1,245 @@
+/* ==========================================================================
+   SIDEBAR COMPONENT STYLES
+   ========================================================================== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--light-color);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: width var(--transition-normal), background-color var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 1. Sidebar Brand */
+.sidebar-brand {
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--dark-color);
+  letter-spacing: -0.02em;
+}
+
+/* 2. Sidebar User Profile Info Card */
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.user-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-light);
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--dark-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--secondary-color);
+}
+
+/* 3. Navigation Menu */
+.sidebar-menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+/* Custom Scrollbar for Sidebar menu */
+.sidebar-menu::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-menu::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+.sidebar:hover .sidebar-menu::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+}
+
+.menu-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 0.75rem;
+}
+
+.menu-item {
+  position: relative;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius-sm);
+  color: var(--secondary-color);
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: all var(--transition-fast);
+}
+
+.menu-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.menu-text {
+  transition: opacity var(--transition-normal);
+}
+
+/* Badge counts inside menu */
+.menu-badge {
+  margin-left: auto;
+  background-color: var(--danger-color);
+  color: var(--light-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 50px;
+}
+
+/* Active & Hover States */
+.menu-item.active .menu-link,
+.menu-link:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.menu-item.active .menu-icon,
+.menu-link:hover .menu-icon {
+  color: var(--primary-color);
+}
+
+/* Logout Item styling override */
+.logout-item {
+  margin-top: 1rem;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 1rem;
+}
+
+.logout-item .menu-link:hover {
+  background-color: var(--danger-light);
+  color: var(--danger-color);
+}
+
+.logout-item .menu-link:hover .menu-icon {
+  color: var(--danger-color);
+}
+
+/* ==========================================================================
+   COLLAPSIBLE SIDEBAR RULES
+   ========================================================================== */
+.sidebar-toggle {
+  position: absolute;
+  bottom: 20px;
+  right: -15px;
+  width: 30px;
+  height: 30px;
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  z-index: 1001;
+  transition: transform var(--transition-normal);
+}
+.sidebar-toggle:hover {
+  color: var(--primary-color);
+  background-color: var(--secondary-light);
+}
+
+/* Collapsed Sidebar overrides */
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+.sidebar.collapsed .sidebar-brand {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar.collapsed .brand-name,
+.sidebar.collapsed .sidebar-user .user-info,
+.sidebar.collapsed .menu-text,
+.sidebar.collapsed .menu-badge {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-user {
+  justify-content: center;
+  padding: 1.25rem 0;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  transform: rotate(180deg);
+}
+
+.sidebar.collapsed .menu-list {
+  padding: 0 0.5rem;
+}
+
+.sidebar.collapsed .menu-link {
+  justify-content: center;
+  padding: 0.8rem 0;
+}

@@ -1,0 +1,92 @@
+<!-- Reusable Sidebar Navigation Drawer Component -->
+<div class="sidebar-brand">
+  <div class="brand-logo">
+    <i class="fas fa-book-open"></i>
+  </div>
+  <span class="brand-name">Book Heaven</span>
+</div>
+
+<div class="sidebar-user">
+  <!-- Image avatar dynamically loaded by JS -->
+  <img src="https://ui-avatars.com/api/?name=Sophia+Vance" alt="Admin Avatar" class="user-avatar-img">
+  <div class="user-info">
+    <span class="user-name">Sophia Vance</span>
+    <span class="user-role">Super Administrator</span>
+  </div>
+</div>
+
+<nav class="sidebar-menu">
+  <ul class="menu-list">
+    <li class="menu-item active">
+      <a href="index.html" class="menu-link">
+        <i class="fas fa-chart-line menu-icon"></i>
+        <span class="menu-text">Dashboard</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="customers.html" class="menu-link">
+        <i class="fas fa-users menu-icon"></i>
+        <span class="menu-text">Customers</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="orders.html" class="menu-link">
+        <i class="fas fa-shopping-cart menu-icon"></i>
+        <span class="menu-text">Orders</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="books.html" class="menu-link">
+        <i class="fas fa-book menu-icon"></i>
+        <span class="menu-text">Books</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="categories.html" class="menu-link">
+        <i class="fas fa-th-list menu-icon"></i>
+        <span class="menu-text">Categories</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="inventory.html" class="menu-link">
+        <i class="fas fa-boxes menu-icon"></i>
+        <span class="menu-text">Inventory</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="analytics.html" class="menu-link">
+        <i class="fas fa-chart-pie menu-icon"></i>
+        <span class="menu-text">Analytics</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="notifications.html" class="menu-link">
+        <i class="fas fa-bell menu-icon"></i>
+        <span class="menu-text">Notifications</span>
+        <span class="menu-badge" id="sidebar-notif-count">0</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="settings.html" class="menu-link">
+        <i class="fas fa-cog menu-icon"></i>
+        <span class="menu-text">Settings</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="profile.html" class="menu-link">
+        <i class="fas fa-user-circle menu-icon"></i>
+        <span class="menu-text">Profile</span>
+      </a>
+    </li>
+    <li class="menu-item logout-item">
+      <a href="#" id="sidebar-logout-btn" class="menu-link">
+        <i class="fas fa-sign-out-alt menu-icon"></i>
+        <span class="menu-text">Logout</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div class="sidebar-toggle" id="sidebar-toggle-btn">
+  <i class="fas fa-chevron-left"></i>
+</div>

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "NTF-001",
+    "type": "order",
+    "title": "New Order Received",
+    "message": "Order #ORD-050 placed by James Smith ($84.50)",
+    "time": "2 mins ago",
+    "read": false
+  },
+  {
+    "id": "NTF-002",
+    "type": "stock",
+    "title": "Low Stock Warning",
+    "message": "Book \"Zero to One\" has only 3 copies left in stock!",
+    "time": "1 hour ago",
+    "read": false
+  },
+  {
+    "id": "NTF-003",
+    "type": "customer",
+    "title": "New Customer Registered",
+    "message": "Elizabeth Martinez joined the platform.",
+    "time": "3 hours ago",
+    "read": false
+  },
+  {
+    "id": "NTF-004",
+    "type": "order",
+    "title": "Order Cancelled",
+    "message": "Order #ORD-045 has been cancelled by the customer.",
+    "time": "5 hours ago",
+    "read": true
+  },
+  {
+    "id": "NTF-005",
+    "type": "stock",
+    "title": "Out of Stock Alert",
+    "message": "Book \"The Lean Startup\" is completely out of stock!",
+    "time": "1 day ago",
+    "read": true
+  },
+  {
+    "id": "NTF-006",
+    "type": "system",
+    "title": "System Backup Completed",
+    "message": "Database was backed up successfully to the secure vault.",
+    "time": "1 day ago",
+    "read": true
+  },
+  {
+    "id": "NTF-007",
+    "type": "order",
+    "title": "Order Dispatched",
+    "message": "Order #ORD-048 has been shipped with Tracking ID TRK849204859.",
+    "time": "2 days ago",
+    "read": true
+  },
+  {
+    "id": "NTF-008",
+    "type": "customer",
+    "title": "Profile Updated",
+    "message": "Admin profile information was modified.",
+    "time": "2 days ago",
+    "read": true
+  },
+  {
+    "id": "NTF-009",
+    "type": "order",
+    "title": "Bulk Order Delivered",
+    "message": "Order #ORD-032 consisting of 12 items was successfully delivered.",
+    "time": "3 days ago",
+    "read": true
+  },
+  {
+    "id": "NTF-010",
+    "type": "system",
+    "title": "Security Alert",
+    "message": "Successful login detected from a new IP Address (192.168.1.45).",
+    "time": "4 days ago",
+    "read": true
+  }
+]

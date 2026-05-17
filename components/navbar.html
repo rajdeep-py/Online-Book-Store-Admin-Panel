@@ -1,0 +1,58 @@
+<!-- Reusable Navbar Header Component -->
+<div class="navbar-left">
+  <button class="navbar-mobile-toggle" id="mobile-sidebar-toggle">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="navbar-search">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" placeholder="Search orders, books, customers..." class="search-input" id="global-search-input">
+  </div>
+</div>
+
+<div class="navbar-right">
+  <!-- Theme Toggle -->
+  <button class="nav-action-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+    <i class="fas fa-moon"></i>
+  </button>
+  
+  <!-- Notifications Trigger -->
+  <div class="nav-dropdown" id="notif-dropdown-wrapper">
+    <button class="nav-action-btn" id="notif-trigger-btn">
+      <i class="fas fa-bell"></i>
+      <span class="nav-badge">0</span>
+    </button>
+    <div class="dropdown-panel notif-panel" id="notif-panel-content">
+      <div class="dropdown-header">
+        <h4>Notifications</h4>
+        <a href="notifications.html">View All</a>
+      </div>
+      <div class="dropdown-body" id="navbar-notif-list">
+        <!-- Renders list from javascript -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Profile Dropdown Trigger -->
+  <div class="nav-dropdown" id="profile-dropdown-wrapper">
+    <button class="nav-profile-btn" id="profile-trigger-btn">
+      <img src="https://ui-avatars.com/api/?name=Sophia+Vance" alt="Admin" class="nav-profile-img">
+      <span class="nav-profile-name">Sophia</span>
+      <i class="fas fa-chevron-down profile-arrow"></i>
+    </button>
+    <div class="dropdown-panel profile-panel">
+      <div class="profile-summary">
+        <img src="https://ui-avatars.com/api/?name=Sophia+Vance" alt="Admin">
+        <div>
+          <h5>Sophia Vance</h5>
+          <p>Super Admin</p>
+        </div>
+      </div>
+      <ul class="profile-links">
+        <li><a href="profile.html"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
+        <li><a href="settings.html"><i class="fas fa-sliders-h"></i> Settings</a></li>
+        <li class="divider"></li>
+        <li><a href="#" id="navbar-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

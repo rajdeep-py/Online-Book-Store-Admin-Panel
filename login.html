@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
+  
+  <!-- Font Awesome Icons & Outfit Font -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-body">
+
+  <div class="login-card fade-in-up">
+    <div class="login-brand">
+      <div class="login-logo">
+        <i class="fas fa-book-open"></i>
+      </div>
+      <h1 class="login-title">Book Heaven</h1>
+      <p class="login-subtitle">Administrative Control Panel</p>
+    </div>
+
+    <!-- Login Alert box -->
+    <div id="login-alert-box" style="display: none; margin-bottom: 1.25rem;" class="badge badge-cancelled w-100 p-3 justify-content-center">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="login-alert-message">Invalid credentials!</span>
+    </div>
+
+    <form id="admin-login-form" novalidate>
+      <div class="form-group">
+        <label for="admin-email" class="form-label">Email Address <span class="required-star">*</span></label>
+        <input type="email" id="admin-email" class="form-control" placeholder="Enter administrative email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="admin-password" class="form-label">Password <span class="required-star">*</span></label>
+        <input type="password" id="admin-password" class="form-control" placeholder="Enter secure password" required>
+      </div>
+
+      <div class="form-group mb-4">
+        <label class="checkbox-group">
+          <input type="checkbox" id="remember-me" class="checkbox-control">
+          <span style="font-size: 0.88rem; font-weight: 500;">Remember my session</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 p-3" style="font-size: 1rem;">
+        <i class="fas fa-sign-in-alt"></i> Sign In to System
+      </button>
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="text-muted" style="font-size: 0.82rem;">
+        <i class="fas fa-info-circle text-info"></i> <strong>Default Credentials:</strong><br>
+        Email: <code style="font-weight: 600; color: var(--primary-color);">admin@bookheaven.com</code><br>
+        Password: <code style="font-weight: 600; color: var(--primary-color);">admin123</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- core scripts -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/validation.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('admin-login-form');
+      const emailInput = document.getElementById('admin-email');
+      const passwordInput = document.getElementById('admin-password');
+      const rememberCheckbox = document.getElementById('remember-me');
+      const alertBox = document.getElementById('login-alert-box');
+      const alertMessage = document.getElementById('login-alert-message');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // 1. Audit fields
+        if (window.Validation && !Validation.validateForm(form)) {
+          return;
+        }
+
+        // 2. Perform authentication login
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        const rememberMe = rememberCheckbox.checked;
+
+        const authResult = Auth.login(email, password, rememberMe);
+
+        if (authResult.success) {
+          showToast('Administrative login verified. Welcome back!', 'success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 800);
+        } else {
+          alertBox.style.display = 'flex';
+          alertMessage.textContent = authResult.message;
+          showToast(authResult.message, 'danger');
+        }
+      });
+
+      // Clear alerts on typing
+      emailInput.addEventListener('input', () => { alertBox.style.display = 'none'; });
+      passwordInput.addEventListener('input', () => { alertBox.style.display = 'none'; });
+    });
+  </script>
+</body>
+</html>

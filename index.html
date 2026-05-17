@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Overview - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/charts.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Drawer Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <!-- Content Panel Wrapper -->
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <!-- Scrollable Main Content Body -->
+      <main class="content-body">
+        
+        <!-- Breadcrumb Navigation Bar -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Dashboard Overview</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard</li>
+            </ul>
+          </div>
+          <!-- Report Export action buttons -->
+          <div class="page-actions-block">
+            <button class="btn btn-primary" onclick="showToast('Exporting dashboard systems report...', 'success')">
+              <i class="fas fa-file-export"></i> Export Report
+            </button>
+          </div>
+        </div>
+
+        <!-- 8 Reusable Statistics Metric Cards Grid -->
+        <div class="stats-grid">
+          
+          <!-- 1. Total Revenue -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Total Revenue</span>
+              <span class="stats-number" id="metric-revenue">$0.00</span>
+              <div class="stats-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                <span>14.2% vs last month</span>
+              </div>
+            </div>
+            <div class="stats-icon-wrapper bg-success-light text-success">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+          </div>
+
+          <!-- 2. Total Orders -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Total Orders</span>
+              <span class="stats-number" id="metric-orders">0</span>
+              <div class="stats-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                <span>8.6% vs last month</span>
+              </div>
+            </div>
+            <div class="stats-icon-wrapper bg-primary-light text-primary">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+          </div>
+
+          <!-- 3. Pending Orders -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Pending Orders</span>
+              <span class="stats-number" id="metric-pending">0</span>
+              <div class="stats-trend trend-neutral">
+                <i class="fas fa-minus"></i>
+                <span>Steady rates</span>
+              </div>
+            </div>
+            <div class="stats-icon-wrapper bg-warning-light text-warning">
+              <i class="fas fa-clock"></i>
+            </div>
+          </div>
+
+          <!-- 4. Delivered Orders -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Delivered Orders</span>
+              <span class="stats-number" id="metric-delivered">0</span>
+              <div class="stats-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                <span>11.4% vs last week</span>
+              </div>
+            </div>
+            <div class="stats-icon-wrapper bg-info-light text-info">
+              <i class="fas fa-box-open"></i>
+            </div>
+          </div>
+
+          <!-- 5. Total Customers -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Total Customers</span>
+              <span class="stats-number" id="metric-customers">0</span>
+              <div class="stats-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                <span>2.4% vs last week</span>
+              </div>
+            </div>
+            <div class="stats-icon-wrapper bg-primary-light text-primary">
+              <i class="fas fa-users"></i>
+            </div>
+          </div>
+
+          <!-- 6. Total Books -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Total Books</span>
+              <span class="stats-number" id="metric-books">0</span>
+              <span style="font-size: 0.75rem; color: var(--secondary-color); font-weight:500; margin-top: 0.25rem;">Active catalog titles</span>
+            </div>
+            <div class="stats-icon-wrapper bg-info-light text-info">
+              <i class="fas fa-book"></i>
+            </div>
+          </div>
+
+          <!-- 7. Low Stock Titles -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Low Stock Books</span>
+              <span class="stats-number" id="metric-low-stock">0</span>
+              <span style="font-size: 0.75rem; color: var(--secondary-color); font-weight:500; margin-top: 0.25rem;">Below stock threshold</span>
+            </div>
+            <div class="stats-icon-wrapper bg-danger-light text-danger">
+              <i class="fas fa-boxes"></i>
+            </div>
+          </div>
+
+          <!-- 8. Monthly Sales Ratio -->
+          <div class="card stats-card">
+            <div class="stats-info">
+              <span class="stats-label">Monthly Sales</span>
+              <span class="stats-number" style="font-size: 1.5rem;">+15.6%</span>
+              <div class="stats-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                <span>Exceeds Q2 target</span>
+              </div>
+            </div>
+            <div class="stats-icon-wrapper bg-success-light text-success">
+              <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Dashboard Charts Grid Block -->
+        <div class="dashboard-grid-1">
+          
+          <!-- Monthly Revenue Area Line Chart -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Monthly Revenue Performance</h3>
+              <a href="analytics.html" class="card-action">View Reports</a>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="dashboard-revenue-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Status Distribution Doughnut Chart -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Order Status Distribution</h3>
+              <a href="orders.html" class="card-action">Manage Orders</a>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="dashboard-order-status-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Dashboard Lower Details Grid -->
+        <div class="dashboard-grid-2">
+          
+          <!-- Recent Orders Listing Table -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Recent Transactions</h3>
+              <a href="orders.html" class="card-action">View All</a>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive" style="border: none;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-orders-table-body">
+                    <!-- Dynamic rendering by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Best Sellers list, Stock Warnings, Activities -->
+          <div class="d-grid gap-3" style="grid-template-columns: 1fr;">
+            
+            <!-- Inventory Stock Warnings Alert banner block -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-boxes text-danger"></i> Inventory Warnings</h3>
+                <a href="inventory.html" class="card-action">Manage Stock</a>
+              </div>
+              <div class="card-body" id="dashboard-stock-alerts">
+                <!-- Restock Alerts -->
+              </div>
+            </div>
+
+            <!-- Dashboard Lower split grid (Bestsellers / Activities) -->
+            <div class="d-grid gap-3" style="grid-template-columns: 1fr 1.2fr; align-items: start;">
+              
+              <!-- Top Selling Book Titles list -->
+              <div class="card m-0" style="height: 100%;">
+                <div class="card-header">
+                  <h3 class="card-title">Top Sellers</h3>
+                </div>
+                <div class="card-body p-0">
+                  <div class="list-group" id="dashboard-best-sellers">
+                    <!-- Dynamic bestseller entries -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent Activity Timelines Logs -->
+              <div class="card m-0" style="height: 100%;">
+                <div class="card-header">
+                  <h3 class="card-title">System Activities</h3>
+                  <a href="notifications.html" class="card-action">View Logs</a>
+                </div>
+                <div class="card-body">
+                  <div class="timeline" id="dashboard-activities">
+                    <!-- Dynamic timeline activity entries -->
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- Framework components -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  
+  <!-- Visual graph charts and main initializer scripts -->
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+</body>
+</html>

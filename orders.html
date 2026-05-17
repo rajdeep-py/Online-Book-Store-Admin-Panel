@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Orders - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Styling for horizontal workflow status tabs */
+    .order-tabs-container {
+      display: flex;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      gap: 1.5rem;
+      overflow-x: auto;
+    }
+    
+    .order-filter-tab {
+      padding: 0.85rem 0.25rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+      font-size: 0.92rem;
+    }
+    
+    .order-filter-tab:hover {
+      color: var(--primary-color);
+    }
+    
+    .order-filter-tab.active {
+      color: var(--primary-color);
+    }
+    
+    .order-filter-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2.5px;
+      background-color: var(--primary-color);
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Order Processing Center</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Orders</li>
+            </ul>
+          </div>
+          <div class="page-actions-block">
+            <button class="btn btn-primary" id="export-orders-btn">
+              <i class="fas fa-file-pdf"></i> Export Orders Report
+            </button>
+          </div>
+        </div>
+
+        <!-- Central Orders Card Data-Table -->
+        <div class="card p-4">
+          
+          <!-- Horizontal Workflow Status Tabs -->
+          <div class="order-tabs-container">
+            <div class="order-filter-tab active" data-status="all">All Orders</div>
+            <div class="order-filter-tab" data-status="pending">Pending</div>
+            <div class="order-filter-tab" data-status="confirmed">Confirmed</div>
+            <div class="order-filter-tab" data-status="dispatched">Dispatched</div>
+            <div class="order-filter-tab" data-status="delivered">Delivered</div>
+            <div class="order-filter-tab" data-status="cancelled">Cancelled</div>
+          </div>
+
+          <!-- Table Action Filters Header -->
+          <div class="table-filter-bar" style="margin-top: 0;">
+            
+            <div class="filter-bar-left">
+              <!-- Inline Text Search -->
+              <div class="table-search-wrapper" style="max-width: 380px;">
+                <i class="fas fa-search table-search-icon"></i>
+                <input type="text" placeholder="Search by Order ID, Customer Name..." class="table-search-input" id="order-search">
+              </div>
+            </div>
+            
+            <div class="filter-bar-right">
+              <span class="text-muted" style="font-size: 0.85rem; font-weight: 500;">
+                <i class="fas fa-cog"></i> Process order transitions inside details views
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Renders Order Table component outline -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Info</th>
+                  <th>Order Date</th>
+                  <th>Billing Total</th>
+                  <th>Status</th>
+                  <th>Payment Mode</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body">
+                <!-- Populated dynamically by assets/js/orders.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Order Pagination Controls bar -->
+          <div class="table-pagination-bar">
+            <span class="pagination-info" id="pagination-info-label">Showing 1 to 8 of 50 orders</span>
+            <ul class="pagination-controls">
+              <li><button class="page-btn" id="pag-prev" disabled><i class="fas fa-chevron-left"></i> Previous</button></li>
+              <li><button class="page-btn" id="pag-next">Next <i class="fas fa-chevron-right"></i></button></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- core scripts -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  
+  <!-- orders logic initializers -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/orders.js"></script>
+</body>
+</html>

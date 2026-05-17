@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Profile Details - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Customer Profile Card</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item"><a href="customers.html">Customers</a></li>
+              <li class="breadcrumb-item active">Details</li>
+            </ul>
+          </div>
+          <div class="page-actions-block d-flex gap-2">
+            <!-- Dynamic Activation/Suspension button -->
+            <button class="btn btn-danger" id="customer-details-action-btn">
+              <i class="fas fa-user-slash"></i> Suspend Customer
+            </button>
+            <a href="customers.html" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+          </div>
+        </div>
+
+        <!-- Details Grid Split Layout -->
+        <div class="dashboard-grid-1">
+          
+          <!-- Left Column: Customer Profile and Metrics Info Card -->
+          <div class="card text-center p-4">
+            <div class="d-flex flex-column align-items-center gap-3">
+              <!-- Big Avatar Image -->
+              <img src="https://ui-avatars.com/api/?name=Sophia+Vance&size=128" alt="Profile" class="user-avatar-img mb-2" id="details-avatar" style="width: 110px; height: 110px; border: 4px solid var(--primary-light);">
+              
+              <h2 id="details-name" style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--dark-color);">Loading Name...</h2>
+              <span class="badge badge-active" id="details-status-badge">Active</span>
+              
+              <div class="w-100 mt-4 text-left d-flex flex-column gap-3 p-3 bg-secondary-light" style="border-radius: var(--border-radius-sm); border: 1px solid var(--border-color);">
+                <div class="d-flex justify-content-between" style="font-size: 0.9rem;">
+                  <span class="text-muted"><i class="fas fa-envelope mr-1"></i> Email:</span>
+                  <strong id="details-email" class="text-primary">email@example.com</strong>
+                </div>
+                <div class="d-flex justify-content-between" style="font-size: 0.9rem;">
+                  <span class="text-muted"><i class="fas fa-phone mr-1"></i> Phone:</span>
+                  <strong id="details-phone">N/A</strong>
+                </div>
+                <div class="d-flex justify-content-between" style="font-size: 0.9rem;">
+                  <span class="text-muted"><i class="fas fa-calendar-alt mr-1"></i> Join Date:</span>
+                  <strong id="details-join-date">N/A</strong>
+                </div>
+                <div class="d-flex flex-column gap-1" style="font-size: 0.9rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+                  <span class="text-muted"><i class="fas fa-map-marker-alt mr-1"></i> Default Shipping Address:</span>
+                  <strong id="details-address" style="line-height: 1.4; margin-top: 0.25rem;">N/A</strong>
+                </div>
+              </div>
+
+              <!-- Metric totals boxes side-by-side -->
+              <div class="d-grid w-100 gap-2 mt-2" style="grid-template-columns: 1fr 1fr;">
+                
+                <div class="p-3 text-center" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background-color: var(--light-color);">
+                  <span class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.25rem;">Total Spent</span>
+                  <strong id="details-spent" class="text-success" style="font-size: 1.35rem; font-family:'Outfit', sans-serif;">$0.00</strong>
+                </div>
+
+                <div class="p-3 text-center" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); background-color: var(--light-color);">
+                  <span class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.25rem;">Orders Placed</span>
+                  <strong id="details-orders-count" class="text-primary" style="font-size: 1.35rem; font-family:'Outfit', sans-serif;">0</strong>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right Column: Customer Orders history table grid -->
+          <div class="card p-4">
+            <div class="card-header m-0 mb-4">
+              <h3 class="card-title"><i class="fas fa-history text-secondary"></i> Purchase History</h3>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date Placed</th>
+                    <th>Billing Total</th>
+                    <th>Delivery Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="customer-orders-table-body">
+                  <!-- Dynamic render by JS -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- core framework scripts -->
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  
+  <!-- client controller scripts -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/customers.js"></script>
+</body>
+</html>

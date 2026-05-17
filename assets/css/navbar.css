@@ -1,0 +1,333 @@
+/* ==========================================================================
+   TOP STICKY NAVBAR COMPONENT
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--navbar-height);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 2rem 0 calc(var(--sidebar-width) + 2rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+  transition: padding var(--transition-normal), background-color var(--transition-normal);
+}
+
+/* Sidebar Collapsed State for Navbar spacing */
+body.sidebar-collapsed .navbar {
+  padding-left: calc(var(--sidebar-collapsed-width) + 2rem);
+}
+
+/* 1. Navbar Left Elements */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.navbar-mobile-toggle {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--secondary-color);
+  cursor: pointer;
+  display: none; /* Desktop hidden */
+}
+
+/* Search Container styles */
+.navbar-search {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  background-color: var(--secondary-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  outline: none;
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.search-input:focus {
+  background-color: var(--light-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* 2. Navbar Right Actions */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-action-btn {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--secondary-color);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.nav-action-btn:hover {
+  background-color: var(--secondary-light);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--danger-color);
+  color: var(--light-color);
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--light-color);
+}
+
+/* 3. User Avatar Action Button */
+.nav-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.35rem 0.75rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.nav-profile-btn:hover {
+  background-color: var(--secondary-light);
+}
+
+.nav-profile-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-profile-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark-color);
+}
+
+.profile-arrow {
+  font-size: 0.75rem;
+  color: var(--secondary-color);
+}
+
+/* ==========================================================================
+   DROPDOWN SLIDEOUT PANELS
+   ========================================================================== */
+.nav-dropdown {
+  position: relative;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  display: none;
+  z-index: 1100;
+  overflow: hidden;
+  animation: fadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.nav-dropdown.active .dropdown-panel {
+  display: block;
+}
+
+/* 3a. Notifications Dropdown panel */
+.notif-panel {
+  width: 360px;
+}
+
+.dropdown-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-header h4 {
+  font-weight: 700;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+.dropdown-header a {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.dropdown-body {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color var(--transition-fast);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: var(--secondary-light);
+}
+
+.dropdown-item.unread {
+  background-color: rgba(99, 102, 241, 0.03);
+}
+
+.item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.item-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--dark-color);
+}
+
+.item-message {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  line-height: 1.4;
+}
+
+.item-time {
+  font-size: 0.72rem;
+  color: var(--secondary-color);
+  margin-top: 0.25rem;
+}
+
+.empty-dropdown {
+  padding: 2rem;
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
+
+/* 3b. Profile Dropdown panel */
+.profile-panel {
+  width: 240px;
+}
+
+.profile-summary {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--secondary-light);
+}
+
+.profile-summary img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-summary h5 {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--dark-color);
+}
+
+.profile-summary p {
+  font-size: 0.75rem;
+  color: var(--secondary-color);
+}
+
+.profile-links {
+  list-style: none;
+  padding: 0.5rem 0;
+}
+
+.profile-links li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  color: var(--secondary-color);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.profile-links li a:hover {
+  background-color: var(--secondary-light);
+  color: var(--primary-color);
+}
+
+.profile-links li.divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 0.5rem 0;
+}
+[data-theme="dark"] .navbar {
+  background-color: rgba(22, 30, 46, 0.8);
+}
