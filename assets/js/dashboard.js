@@ -98,19 +98,31 @@
       if (analytics.bestSellers.length === 0) {
         bestSellersList.innerHTML = '<div class="text-center text-muted p-3">No sales logs found</div>';
       } else {
-        bestSellersList.innerHTML = analytics.bestSellers.map(b => `
-          <div class="list-item fade-in">
-            <div class="best-seller-book">
-              <img src="${b.cover}" alt="Book Cover" class="best-seller-cover">
-              <div class="best-seller-details">
-                <span class="best-seller-title">${b.title}</span>
-                <span class="best-seller-author">by ${b.author}</span>
-                <span class="best-seller-sales">${b.salesCount} sold</span>
+        bestSellersList.innerHTML = analytics.bestSellers.map((b, idx) => {
+          const rank = idx + 1;
+          let rankClass = 'rank-other';
+          if (rank === 1) rankClass = 'rank-1';
+          else if (rank === 2) rankClass = 'rank-2';
+          else if (rank === 3) rankClass = 'rank-3';
+
+          return `
+            <div class="top-seller-card fade-in">
+              <div class="top-seller-left">
+                <div class="rank-badge ${rankClass}">${rank}</div>
+                <img src="${b.cover}" alt="Book Cover" class="best-seller-cover">
+                <div class="best-seller-details">
+                  <span class="best-seller-title" title="${b.title}">${b.title}</span>
+                  <span class="best-seller-author">by ${b.author}</span>
+                  <span class="best-seller-sales-badge"><i class="fas fa-fire mr-1"></i>${b.salesCount} sold</span>
+                </div>
+              </div>
+              <div class="top-seller-right">
+                <span class="top-seller-revenue">${formatCurrency(b.totalRevenue)}</span>
+                <span class="text-muted" style="font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em;">Revenue</span>
               </div>
             </div>
-            <span class="item-value">${formatCurrency(b.totalRevenue)}</span>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
     }
 
@@ -122,18 +134,28 @@
         activityTimeline.innerHTML = '<div class="text-center text-muted p-3">No system logs found</div>';
       } else {
         activityTimeline.innerHTML = notifs.map(n => {
-          let dotColor = 'dot-primary';
-          if (n.type === 'stock') dotColor = 'dot-warning';
-          if (n.type === 'customer') dotColor = 'dot-info';
-          if (n.type === 'system') dotColor = 'dot-secondary';
+          let iconHTML = '<i class="fas fa-cog"></i>';
+          let badgeClass = 'bg-primary-light text-primary';
+          if (n.type === 'order') {
+            iconHTML = '<i class="fas fa-shopping-cart"></i>';
+            badgeClass = 'bg-success-light text-success';
+          } else if (n.type === 'stock') {
+            iconHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            badgeClass = 'bg-warning-light text-warning';
+          } else if (n.type === 'customer') {
+            iconHTML = '<i class="fas fa-user-plus"></i>';
+            badgeClass = 'bg-info-light text-info';
+          }
 
           return `
-            <div class="timeline-item ${dotColor} fade-in">
-              <div class="timeline-dot"></div>
+            <div class="timeline-item fade-in">
+              <div class="timeline-icon-box ${badgeClass}">
+                ${iconHTML}
+              </div>
               <div class="timeline-content">
                 <span class="timeline-title">${n.title}</span>
                 <span class="timeline-desc">${n.message}</span>
-                <span class="timeline-time">${n.time}</span>
+                <span class="timeline-time"><i class="far fa-clock mr-1"></i>${n.time}</span>
               </div>
             </div>
           `;
@@ -148,22 +170,53 @@
       if (latestOrders.length === 0) {
         recentOrdersBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No orders found</td></tr>';
       } else {
-        recentOrdersBody.innerHTML = latestOrders.map(o => `
-          <tr class="fade-in">
-            <td><strong>#${o.id}</strong></td>
-            <td>${o.customerName}</td>
-            <td>${formatDate(o.date)}</td>
-            <td><strong>${formatCurrency(o.amount)}</strong></td>
-            <td><span class="badge badge-${o.status.toLowerCase()}">${o.status}</span></td>
-            <td>
-              <div class="table-actions">
-                <a href="order-details.html?id=${o.id}" class="action-btn" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </a>
-              </div>
-            </td>
-          </tr>
-        `).join('');
+        recentOrdersBody.innerHTML = latestOrders.map(o => {
+          const nameParts = o.customerName.split(' ');
+          const initials = nameParts.map(p => p[0]).join('').substring(0, 2).toUpperCase();
+          const bgColors = ['rgba(79, 70, 229, 0.1)', 'rgba(16, 185, 129, 0.1)', 'rgba(245, 158, 11, 0.1)', 'rgba(59, 130, 246, 0.1)', 'rgba(236, 72, 153, 0.1)'];
+          const textColors = ['#4f46e5', '#10b981', '#f59e0b', '#3b82f6', '#ec4899'];
+          const colorIndex = o.customerName.length % bgColors.length;
+          const bgColor = bgColors[colorIndex];
+          const textColor = textColors[colorIndex];
+
+          let dotColor = 'status-dot-pending';
+          if (o.status.toLowerCase() === 'delivered') dotColor = 'status-dot-delivered';
+          else if (o.status.toLowerCase() === 'confirmed') dotColor = 'status-dot-confirmed';
+          else if (o.status.toLowerCase() === 'dispatched') dotColor = 'status-dot-dispatched';
+          else if (o.status.toLowerCase() === 'cancelled') dotColor = 'status-dot-cancelled';
+
+          return `
+            <tr class="fade-in hover-row-glow">
+              <td><span class="order-id-badge">#${o.id}</span></td>
+              <td>
+                <div class="customer-cell-modern">
+                  <div class="customer-avatar-mini" style="background-color: ${bgColor}; color: ${textColor};">
+                    ${initials}
+                  </div>
+                  <div class="d-flex flex-column" style="min-width: 0;">
+                    <span class="font-weight-bold text-dark text-ellipsis" style="font-size: 0.88rem;">${o.customerName}</span>
+                    <span class="text-muted" style="font-size: 0.72rem;">Customer</span>
+                  </div>
+                </div>
+              </td>
+              <td style="font-size: 0.85rem; font-weight: 500; color: var(--secondary-color);">${formatDate(o.date)}</td>
+              <td><span class="text-success font-weight-bold" style="font-size: 0.88rem;">${formatCurrency(o.amount)}</span></td>
+              <td>
+                <span class="badge badge-${o.status.toLowerCase()} d-inline-flex align-items-center" style="gap: 6px; padding: 0.35rem 0.65rem; border-radius: 30px;">
+                  <span class="status-dot ${dotColor}"></span>
+                  ${o.status}
+                </span>
+              </td>
+              <td>
+                <div class="table-actions">
+                  <a href="order-details.html?id=${o.id}" class="action-btn" title="View Details" style="width: 28px; height: 28px; font-size: 0.75rem;">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
       }
     }
 

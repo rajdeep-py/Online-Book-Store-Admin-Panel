@@ -30,48 +30,58 @@
   flex-direction: column;
   gap: 1.25rem;
   position: relative;
-  padding-left: 1.5rem;
+  padding-left: 0;
 }
 
 .timeline::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 4px;
-  bottom: 0;
+  top: 10px;
+  left: 18px;
+  bottom: 10px;
   width: 2px;
-  background-color: var(--border-color);
+  background: linear-gradient(to bottom, var(--primary-color), var(--border-color) 70%, transparent);
 }
 
 .timeline-item {
+  display: flex;
+  gap: 1.25rem;
   position: relative;
+  padding-left: 2.75rem;
 }
 
-.timeline-dot {
+.timeline-icon-box {
   position: absolute;
-  top: 4px;
-  left: -20px;
-  width: 10px;
-  height: 10px;
+  left: 0;
+  top: 2px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background-color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.88rem;
   border: 2px solid var(--light-color);
-  box-shadow: 0 0 0 2px var(--primary-light);
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
+  transition: all var(--transition-fast) ease-in-out;
 }
 
-.timeline-item.dot-success .timeline-dot { background-color: var(--success-color); box-shadow: 0 0 0 2px var(--success-light); }
-.timeline-item.dot-warning .timeline-dot { background-color: var(--warning-color); box-shadow: 0 0 0 2px var(--warning-light); }
-.timeline-item.dot-danger .timeline-dot { background-color: var(--danger-color); box-shadow: 0 0 0 2px var(--danger-light); }
-.timeline-item.dot-info .timeline-dot { background-color: var(--info-color); box-shadow: 0 0 0 2px var(--info-light); }
+.timeline-item:hover .timeline-icon-box {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
 
 .timeline-content {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .timeline-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.88rem;
   color: var(--dark-color);
 }
@@ -79,38 +89,111 @@
 .timeline-desc {
   font-size: 0.8rem;
   color: var(--secondary-color);
+  line-height: 1.3;
 }
 
 .timeline-time {
   font-size: 0.72rem;
   color: var(--secondary-color);
-  font-weight: 500;
+  font-weight: 600;
+  margin-top: 0.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* 3. Book Cover Lists for Best Sellers */
-.best-seller-book {
+.top-seller-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-fast) ease-in-out;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.top-seller-card:last-child {
+  margin-bottom: 0;
+}
+
+.top-seller-card:hover {
+  background-color: var(--secondary-light);
+  border-color: var(--primary-color);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.top-seller-left {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.rank-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  flex-shrink: 0;
+}
+
+.rank-1 {
+  background: linear-gradient(135deg, #fcd34d, #f59e0b);
+  color: #78350f;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+.rank-2 {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  color: #334155;
+  box-shadow: 0 2px 4px rgba(203, 213, 225, 0.2);
+}
+
+.rank-3 {
+  background: linear-gradient(135deg, #fdba74, #f97316);
+  color: #7c2d12;
+  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
+}
+
+.rank-other {
+  background-color: var(--secondary-light);
+  color: var(--secondary-color);
 }
 
 .best-seller-cover {
-  width: 44px;
-  height: 60px;
-  border-radius: 4px;
+  width: 42px;
+  height: 56px;
+  border-radius: 6px;
   object-fit: cover;
   box-shadow: var(--shadow-sm);
   flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.top-seller-card:hover .best-seller-cover {
+  transform: scale(1.08) rotate(2deg);
 }
 
 .best-seller-details {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  flex: 1;
 }
 
 .best-seller-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.88rem;
   color: var(--dark-color);
   white-space: nowrap;
@@ -126,10 +209,114 @@
   text-overflow: ellipsis;
 }
 
-.best-seller-sales {
-  font-size: 0.78rem;
+.best-seller-sales-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--primary-color);
-  font-weight: 600;
+  background-color: var(--primary-light);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  width: fit-content;
+  margin-top: 0.25rem;
+  gap: 3px;
+}
+
+.top-seller-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+}
+
+.top-seller-revenue {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--success-color);
+}
+
+/* 4. Recent Transactions Table Enhancements */
+.hover-row-glow {
+  transition: background-color var(--transition-fast) ease-in-out;
+}
+
+.hover-row-glow:hover {
+  background-color: rgba(99, 102, 241, 0.03) !important;
+}
+
+.order-id-badge {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  font-family: 'Outfit', sans-serif;
+  display: inline-block;
+}
+
+.customer-cell-modern {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.customer-avatar-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot-pending {
+  background-color: var(--warning-color);
+  animation: pulse-warning 1.8s infinite;
+}
+
+.status-dot-delivered {
+  background-color: var(--success-color);
+}
+
+.status-dot-confirmed {
+  background-color: var(--info-color);
+}
+
+.status-dot-dispatched {
+  background-color: var(--primary-color);
+}
+
+.status-dot-cancelled {
+  background-color: var(--danger-color);
+}
+
+@keyframes pulse-warning {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(245, 158, 11, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
 }
 
 /* 4. Custom Low Stock Alerts in Dashboard */
