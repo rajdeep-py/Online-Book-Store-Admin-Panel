@@ -15,10 +15,10 @@
     initializeInventoryListView();
   });
 
-  function initializeInventoryListView() {
+  async function initializeInventoryListView() {
     if (!window.BookstoreAPI) return;
 
-    const books = BookstoreAPI.getBooks();
+    const books = await BookstoreAPI.getBooks();
     filteredBooks = [...books];
 
     const searchInput = document.getElementById('inventory-search');
@@ -27,7 +27,7 @@
 
     // Renders initial list
     renderInventoryTable();
-    updateHeaderSummaries();
+    await updateHeaderSummaries();
 
     // Bind Search input
     if (searchInput) {
@@ -56,8 +56,8 @@
     }
   }
 
-  function updateHeaderSummaries() {
-    const books = BookstoreAPI.getBooks();
+  async function updateHeaderSummaries() {
+    const books = await BookstoreAPI.getBooks();
     const lowStockThreshold = BookstoreAPI.getSettings().lowStockThreshold;
 
     const totalCount = books.length;
@@ -79,8 +79,8 @@
     if (healthyBox) healthyBox.textContent = healthyCount;
   }
 
-  function applyFiltersAndSearch(query, filter) {
-    const books = BookstoreAPI.getBooks();
+  async function applyFiltersAndSearch(query, filter) {
+    const books = await BookstoreAPI.getBooks(query);
     const lowStockThreshold = BookstoreAPI.getSettings().lowStockThreshold;
     const cleanQuery = query.toLowerCase().trim();
 
@@ -171,9 +171,9 @@
     }
   }
 
-  function triggerRestockModal(id) {
+  async function triggerRestockModal(id) {
     if (!window.BookstoreAPI) return;
-    const book = BookstoreAPI.getBookById(id);
+    const book = await BookstoreAPI.getBookById(id);
     if (!book) return;
 
     const modalHTML = `
@@ -193,7 +193,7 @@
           id: 'submit',
           label: 'Add Stock',
           type: 'success',
-          callback: (close) => {
+          callback: async (close) => {
             const qtyInput = document.getElementById('restock-qty-input');
             const qtyToAdd = parseInt(qtyInput.value);
 
@@ -203,14 +203,17 @@
             }
 
             const newStock = book.stock + qtyToAdd;
-            BookstoreAPI.updateBook(id, { stock: newStock });
-            
-            BookstoreAPI.addNotification('stock', 'Inventory Restocked', `Book "${book.title}" stock increased by +${qtyToAdd} units.`);
-            showToast(`Successfully added +${qtyToAdd} units to "${book.title}"!`, 'success');
-            
-            close();
-            // Re-render
-            initializeInventoryListView();
+            const result = await BookstoreAPI.updateBook(id, { stock: newStock });
+            if (result) {
+              BookstoreAPI.addNotification('stock', 'Inventory Restocked', `Book "${book.title}" stock increased by +${qtyToAdd} units.`);
+              showToast(`Successfully added +${qtyToAdd} units to "${book.title}"!`, 'success');
+              
+              close();
+              // Re-render
+              initializeInventoryListView();
+            } else {
+              showToast('Failed to restock book.', 'danger');
+            }
           }
         }
       ]

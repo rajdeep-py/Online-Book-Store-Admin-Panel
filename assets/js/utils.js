@@ -210,12 +210,6 @@
               <span class="menu-text">Books</span>
             </a>
           </li>
-          <li class="menu-item ${activePage === 'categories' ? 'active' : ''}">
-            <a href="categories.html" class="menu-link">
-              <i class="fas fa-th-list menu-icon"></i>
-              <span class="menu-text">Categories</span>
-            </a>
-          </li>
           <li class="menu-item ${activePage === 'inventory' ? 'active' : ''}">
             <a href="inventory.html" class="menu-link">
               <i class="fas fa-boxes menu-icon"></i>

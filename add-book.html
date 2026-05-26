@@ -69,13 +69,16 @@
                   <input type="text" id="book-author" class="form-control" placeholder="e.g. F. Scott Fitzgerald" required>
                 </div>
 
+                <!-- Author Description -->
+                <div class="form-group">
+                  <label for="book-author-desc" class="form-label">Author Description</label>
+                  <textarea id="book-author-desc" class="form-control" placeholder="Brief author bio..."></textarea>
+                </div>
+
                 <!-- Category -->
                 <div class="form-group">
                   <label for="book-category" class="form-label">Category / Genre <span class="required-star">*</span></label>
-                  <select id="book-category" class="form-control" required>
-                    <option value="">Select Category</option>
-                    <!-- Loaded dynamically by JS -->
-                  </select>
+                  <input type="text" id="book-category" class="form-control" placeholder="e.g. Technology" required>
                 </div>
 
                 <!-- Unit Price -->
@@ -90,28 +93,17 @@
                   <input type="number" id="book-stock" class="form-control" placeholder="e.g. 50" min="0" required>
                 </div>
 
-                <!-- ISBN -->
+                <!-- Discount Percent -->
                 <div class="form-group">
-                  <label for="book-isbn" class="form-label">ISBN Code <span class="required-star">*</span></label>
-                  <input type="text" id="book-isbn" class="form-control" placeholder="e.g. 978-3-16-148410-0" required>
+                  <label for="book-discount" class="form-label">Discount Percent (%)</label>
+                  <input type="number" id="book-discount" class="form-control" placeholder="e.g. 10" min="0" max="100" step="0.01">
                 </div>
 
-                <!-- Publisher -->
-                <div class="form-group">
-                  <label for="book-publisher" class="form-label">Publisher</label>
-                  <input type="text" id="book-publisher" class="form-control" placeholder="e.g. Penguin Books">
-                </div>
 
-                <!-- Publish Date -->
+                <!-- Cover File -->
                 <div class="form-group">
-                  <label for="book-publish-date" class="form-label">Publication Date</label>
-                  <input type="date" id="book-publish-date" class="form-control">
-                </div>
-
-                <!-- Cover URL -->
-                <div class="form-group">
-                  <label for="book-cover-url" class="form-label">Cover Image URL <span class="required-star">*</span></label>
-                  <input type="url" id="book-cover-url" class="form-control" placeholder="e.g. https://images.unsplash.com/..." required>
+                  <label for="book-cover-file" class="form-label">Cover Image File <span class="required-star">*</span></label>
+                  <input type="file" id="book-cover-file" class="form-control" accept="image/*" required>
                 </div>
 
                 <!-- Description -->
@@ -154,6 +146,7 @@
   </div>
 
   <!-- core scripts -->
+  <script src="assets/js/config.js"></script>
   <script src="assets/js/api.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/auth.js"></script>

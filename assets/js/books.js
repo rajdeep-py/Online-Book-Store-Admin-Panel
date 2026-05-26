@@ -24,19 +24,14 @@
   // ==========================================================================
   // BOOKS LISTINGS CONTROLLER (books.html)
   // ==========================================================================
-  function initializeBooksListView() {
+  async function initializeBooksListView() {
     if (!window.BookstoreAPI) return;
 
-    const books = BookstoreAPI.getBooks();
+    const books = await BookstoreAPI.getBooks();
     filteredBooks = [...books];
 
-    // Load category filter select options
     const categorySelect = document.getElementById('book-filter-category');
-    if (categorySelect) {
-      const cats = BookstoreAPI.getCategories();
-      categorySelect.innerHTML = '<option value="all">All Categories</option>' + 
-        cats.map(c => `<option value="${c}">${c}</option>`).join('');
-    }
+    // Removed dynamic category population since it is now free text
 
     const searchInput = document.getElementById('book-search');
     const prevBtn = document.getElementById('pag-prev');
@@ -88,16 +83,13 @@
     }
   }
 
-  function applyFiltersAndSearch(query, category) {
-    const books = BookstoreAPI.getBooks();
-    const cleanQuery = query.toLowerCase().trim();
-
+  async function applyFiltersAndSearch(query, category) {
+    const books = await BookstoreAPI.getBooks(query); // Backend filters by title/author
+    
+    // Client-side filter for the category dropdown if still present
     filteredBooks = books.filter(b => {
-      const matchesSearch = b.title.toLowerCase().includes(cleanQuery) || 
-                            b.author.toLowerCase().includes(cleanQuery) || 
-                            b.isbn.toLowerCase().includes(cleanQuery);
       const matchesCategory = category === 'all' || b.category.toLowerCase() === category.toLowerCase();
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     });
 
     currentPage = 1; // Reset to page 1
@@ -186,9 +178,9 @@
     }
   }
 
-  function promptDeleteBook(id) {
+  async function promptDeleteBook(id) {
     if (!window.BookstoreAPI) return;
-    const book = BookstoreAPI.getBookById(id);
+    const book = await BookstoreAPI.getBookById(id);
     if (!book) return;
 
     createModal({
@@ -200,8 +192,8 @@
           id: 'confirm',
           label: 'Delete',
           type: 'danger',
-          callback: (close) => {
-            BookstoreAPI.deleteBook(id);
+          callback: async (close) => {
+            await BookstoreAPI.deleteBook(id);
             BookstoreAPI.addNotification('stock', 'Book Deleted', `Book "${book.title}" was deleted by administrator.`);
             showToast(`"${book.title}" was successfully deleted from inventory!`, 'success');
             close();
@@ -223,17 +215,9 @@
   function initializeAddBookView() {
     if (!window.BookstoreAPI) return;
 
-    // Load category options into dropdown select
-    const categorySelect = document.getElementById('book-category');
-    if (categorySelect) {
-      const cats = BookstoreAPI.getCategories();
-      categorySelect.innerHTML = '<option value="">Select Category</option>' + 
-        cats.map(c => `<option value="${c}">${c}</option>`).join('');
-    }
-
     const form = document.getElementById('add-book-form');
     if (form) {
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // Validate
@@ -245,32 +229,38 @@
         const newBookData = {
           title: document.getElementById('book-title').value.trim(),
           author: document.getElementById('book-author').value.trim(),
-          category: categorySelect.value,
+          authorDesc: document.getElementById('book-author-desc').value.trim(),
+          category: document.getElementById('book-category').value.trim(),
           price: document.getElementById('book-price').value,
+          discount: document.getElementById('book-discount').value,
           stock: document.getElementById('book-stock').value,
-          isbn: document.getElementById('book-isbn').value.trim(),
-          publisher: document.getElementById('book-publisher').value.trim(),
-          publishDate: document.getElementById('book-publish-date').value,
-          cover: document.getElementById('book-cover-url').value.trim(),
+          coverFile: document.getElementById('book-cover-file').files[0],
           description: document.getElementById('book-desc').value.trim()
         };
 
-        const result = BookstoreAPI.addBook(newBookData);
-        BookstoreAPI.addNotification('stock', 'New Book Cataloged', `"${result.title}" added to inventory with ${result.stock} copies.`);
-        showToast(`"${result.title}" has been successfully added to books catalog!`, 'success');
-        
-        setTimeout(() => { window.location.href = 'books.html'; }, 1000);
+        const result = await BookstoreAPI.addBook(newBookData);
+        if (result) {
+          BookstoreAPI.addNotification('stock', 'New Book Cataloged', `"${result.title}" added to inventory with ${result.stock} copies.`);
+          showToast(`"${result.title}" has been successfully added to books catalog!`, 'success');
+          
+          setTimeout(() => { window.location.href = 'books.html'; }, 1000);
+        } else {
+          showToast('Failed to add book.', 'danger');
+        }
       });
     }
 
     // Dynamic Image Cover preview binding
-    const coverUrlInput = document.getElementById('book-cover-url');
+    const coverFileInput = document.getElementById('book-cover-file');
     const coverPreview = document.getElementById('cover-preview-img');
-    if (coverUrlInput && coverPreview) {
-      coverUrlInput.addEventListener('input', () => {
-        const val = coverUrlInput.value.trim();
-        if (val) coverPreview.src = val;
-        else coverPreview.src = 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&q=80';
+    if (coverFileInput && coverPreview) {
+      coverFileInput.addEventListener('change', () => {
+        const file = coverFileInput.files[0];
+        if (file) {
+          coverPreview.src = URL.createObjectURL(file);
+        } else {
+          coverPreview.src = 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&q=80';
+        }
       });
     }
   }
@@ -278,16 +268,8 @@
   // ==========================================================================
   // EDIT EXISTING BOOK CONTROLLER (edit-book.html)
   // ==========================================================================
-  function initializeEditBookView() {
+  async function initializeEditBookView() {
     if (!window.BookstoreAPI) return;
-
-    // Load category choices
-    const categorySelect = document.getElementById('book-category');
-    if (categorySelect) {
-      const cats = BookstoreAPI.getCategories();
-      categorySelect.innerHTML = '<option value="">Select Category</option>' + 
-        cats.map(c => `<option value="${c}">${c}</option>`).join('');
-    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const bookId = urlParams.get('id');
@@ -298,7 +280,7 @@
       return;
     }
 
-    const book = BookstoreAPI.getBookById(bookId);
+    const book = await BookstoreAPI.getBookById(bookId);
     if (!book) {
       showToast('Requested book title not found!', 'danger');
       setTimeout(() => { window.location.href = 'books.html'; }, 1000);
@@ -308,31 +290,33 @@
     // 1. Populate form fields
     const fTitle = document.getElementById('book-title'); if (fTitle) fTitle.value = book.title;
     const fAuthor = document.getElementById('book-author'); if (fAuthor) fAuthor.value = book.author;
-    if (categorySelect) categorySelect.value = book.category;
-    const fPrice = document.getElementById('book-price'); if (fPrice) fPrice.value = book.price;
+    const fAuthorDesc = document.getElementById('book-author-desc'); if (fAuthorDesc) fAuthorDesc.value = book.authorDescription || '';
+    const fCategory = document.getElementById('book-category'); if (fCategory) fCategory.value = book.category;
+    const fPrice = document.getElementById('book-price'); if (fPrice) fPrice.value = book.originalPrice || book.price;
+    const fDiscount = document.getElementById('book-discount'); if (fDiscount) fDiscount.value = book.discountPercent || '';
     const fStock = document.getElementById('book-stock'); if (fStock) fStock.value = book.stock;
-    const fIsbn = document.getElementById('book-isbn'); if (fIsbn) fIsbn.value = book.isbn || '';
-    const fPublisher = document.getElementById('book-publisher'); if (fPublisher) fPublisher.value = book.publisher || '';
-    const fPubDate = document.getElementById('book-publish-date'); if (fPubDate) fPubDate.value = book.publishDate || '';
-    const fCover = document.getElementById('book-cover-url'); if (fCover) fCover.value = book.cover || '';
+    const fCoverFile = document.getElementById('book-cover-file'); // File input, so no value to set
     const fDesc = document.getElementById('book-desc'); if (fDesc) fDesc.value = book.description || '';
 
     const coverPreview = document.getElementById('cover-preview-img');
     if (coverPreview && book.cover) coverPreview.src = book.cover;
 
     // Dynamic Preview binding
-    if (fCover && coverPreview) {
-      fCover.addEventListener('input', () => {
-        const val = fCover.value.trim();
-        if (val) coverPreview.src = val;
-        else coverPreview.src = 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&q=80';
+    if (fCoverFile && coverPreview) {
+      fCoverFile.addEventListener('change', () => {
+        const file = fCoverFile.files[0];
+        if (file) {
+          coverPreview.src = URL.createObjectURL(file);
+        } else {
+          coverPreview.src = book.cover || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&q=80';
+        }
       });
     }
 
     // 2. Form submission trigger
     const form = document.getElementById('edit-book-form');
     if (form) {
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         if (window.Validation && !Validation.validateForm(form)) {
@@ -343,21 +327,24 @@
         const updatedFields = {
           title: fTitle.value.trim(),
           author: fAuthor.value.trim(),
-          category: categorySelect.value,
+          authorDesc: fAuthorDesc ? fAuthorDesc.value.trim() : '',
+          category: fCategory ? fCategory.value.trim() : '',
           price: fPrice.value,
+          discount: fDiscount ? fDiscount.value : '',
           stock: fStock.value,
-          isbn: fIsbn.value.trim(),
-          publisher: fPublisher.value.trim(),
-          publishDate: fPubDate.value,
-          cover: fCover.value.trim(),
+          coverFile: fCoverFile ? fCoverFile.files[0] : null,
           description: fDesc.value.trim()
         };
 
-        const result = BookstoreAPI.updateBook(bookId, updatedFields);
-        BookstoreAPI.addNotification('stock', 'Book Details Modified', `"${result.title}" (ID: ${result.id}) stock or price was updated.`);
-        showToast(`"${result.title}" has been successfully updated in inventory catalog!`, 'success');
-        
-        setTimeout(() => { window.location.href = 'books.html'; }, 1000);
+        const result = await BookstoreAPI.updateBook(bookId, updatedFields);
+        if (result) {
+          BookstoreAPI.addNotification('stock', 'Book Details Modified', `"${result.title}" (ID: ${result.id}) stock or price was updated.`);
+          showToast(`"${result.title}" has been successfully updated in inventory catalog!`, 'success');
+          
+          setTimeout(() => { window.location.href = 'books.html'; }, 1000);
+        } else {
+          showToast('Failed to update book details.', 'danger');
+        }
       });
     }
   }

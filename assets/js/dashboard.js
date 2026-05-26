@@ -11,20 +11,24 @@
     if (currentPage !== 'index.html' && currentPage !== '') return;
 
     showLoader();
-    setTimeout(() => {
-      initializeDashboardView();
+    setTimeout(async () => {
+      try {
+        await initializeDashboardView();
+      } catch (error) {
+        console.error('Dashboard init error:', error);
+      }
       hideLoader();
     }, 400);
   });
 
-  function initializeDashboardView() {
+  async function initializeDashboardView() {
     if (!window.BookstoreAPI) return;
 
     // 1. Gather Metrics data
-    const books = BookstoreAPI.getBooks();
+    const books = await BookstoreAPI.getBooks();
     const orders = BookstoreAPI.getOrders();
     const customers = BookstoreAPI.getCustomers();
-    const analytics = BookstoreAPI.getAnalytics();
+    const analytics = await BookstoreAPI.getAnalytics();
 
     // 2. Populate Metrics Cards
     const cardRevenue = document.getElementById('metric-revenue');
