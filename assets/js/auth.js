@@ -14,23 +14,45 @@
     },
 
     // Perform credentials check
-    login: function (email, password, rememberMe) {
-      // Credentials: admin@bookheaven.com / admin123
-      if (email.trim().toLowerCase() === 'admin@bookheaven.com' && password === 'admin123') {
-        const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem(SESSION_KEY, 'active');
-        
-        // Log activity
-        if (window.BookstoreAPI) {
-          BookstoreAPI.addNotification(
-            'system', 
-            'Admin Login Detected', 
-            `User logged in from browser session (${new Date().toLocaleTimeString()}).`
-          );
+    login: async function (email, password, rememberMe) {
+      try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_LOGIN}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          let adminId = 1; // Default ID if not returned
+          try {
+            const data = await response.json();
+            if (data && data.admin_id) adminId = data.admin_id;
+            else if (data && data.id) adminId = data.id;
+          } catch (e) {
+            // Not JSON
+          }
+
+          const storage = rememberMe ? localStorage : sessionStorage;
+          storage.setItem(SESSION_KEY, 'active');
+          storage.setItem('admin_id', adminId);
+          
+          // Log activity
+          if (window.BookstoreAPI) {
+            BookstoreAPI.addNotification(
+              'system', 
+              'Admin Login Detected', 
+              `User logged in from browser session (${new Date().toLocaleTimeString()}).`
+            );
+          }
+          return { success: true };
+        } else {
+          return { success: false, message: 'Invalid administrative email or password!' };
         }
-        return { success: true };
+      } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, message: 'Connection error. Please try again.' };
       }
-      return { success: false, message: 'Invalid administrative email or password!' };
     },
 
     // Perform log out

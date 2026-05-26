@@ -159,14 +159,14 @@
   };
 
   // CORS-Resilient Common Components Loader (Sidebar, Navbar, Footer)
-  window.loadCommonComponents = function (activePage = '') {
+  window.loadCommonComponents = async function (activePage = '') {
     showLoader();
     
     const sidebarContainer = document.getElementById('sidebar-container');
     const navbarContainer = document.getElementById('navbar-container');
     const footerContainer = document.getElementById('footer-container');
 
-    const admin = BookstoreAPI.getAdminProfile();
+    const admin = await BookstoreAPI.getAdminProfile();
     const settings = BookstoreAPI.getSettings();
 
     // 1. Sidebar HTML template

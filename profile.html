@@ -166,6 +166,7 @@
   </div>
 
   <!-- core scripts -->
+  <script src="assets/js/config.js"></script>
   <script src="assets/js/api.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/auth.js"></script>
@@ -176,7 +177,7 @@
 
   <!-- Profile Logic -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const filename = window.location.pathname.split('/').pop();
       if (filename !== 'profile.html') return;
 
@@ -191,10 +192,10 @@
       const matchError = document.getElementById('pass-match-error');
 
       // 1. Populate current values
-      const profile = BookstoreAPI.getAdminProfile();
-      fNameInput.value = profile.firstName;
-      lNameInput.value = profile.lastName;
-      emailInput.value = profile.email;
+      const profile = await BookstoreAPI.getAdminProfile();
+      fNameInput.value = profile.firstName || '';
+      lNameInput.value = profile.lastName || '';
+      emailInput.value = profile.email || '';
       phoneInput.value = profile.phone || '';
       bioInput.value = profile.bio || '';
 
@@ -202,7 +203,7 @@
       updateLeftDisplayPanel(profile);
 
       // 2. Form submission trigger
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // Standard validation
@@ -240,10 +241,10 @@
         }
 
         // Save
-        BookstoreAPI.updateAdminProfile(updatedProfile);
+        await BookstoreAPI.updateAdminProfile(updatedProfile);
 
         // Update displays
-        const combinedProfile = BookstoreAPI.getAdminProfile();
+        const combinedProfile = await BookstoreAPI.getAdminProfile();
         updateLeftDisplayPanel(combinedProfile);
 
         // Log notification

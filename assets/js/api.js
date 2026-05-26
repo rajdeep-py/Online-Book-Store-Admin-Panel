@@ -406,11 +406,72 @@
     },
 
     // PROFILE
-    getAdminProfile: function () {
-      return getDBItem('profile');
+    getAdminProfile: async function () {
+      const adminId = sessionStorage.getItem('admin_id') || localStorage.getItem('admin_id') || 1;
+      try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const nameParts = (data.admin_name || 'Admin User').split(' ');
+          const profile = {
+            firstName: nameParts[0] || '',
+            lastName: nameParts.slice(1).join(' ') || '',
+            name: data.admin_name || 'Admin User',
+            email: data.admin_email || '',
+            phone: data.admin_phone || '', 
+            bio: data.admin_bio || '',      
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.admin_name || 'Admin User')}&size=128`,
+            role: 'Super Administrator'
+          };
+          setDBItem('profile', profile);
+          return profile;
+        }
+      } catch (error) {
+        console.error('Error fetching admin profile:', error);
+      }
+      return getDBItem('profile') || {
+        firstName: 'Admin',
+        lastName: 'User',
+        name: 'Admin User',
+        email: 'admin@bookheaven.com',
+        avatar: 'https://ui-avatars.com/api/?name=Admin+User&size=128',
+        role: 'Super Administrator'
+      };
     },
-    updateAdminProfile: function (profileData) {
-      const profile = this.getAdminProfile();
+    updateAdminProfile: async function (profileData) {
+      const adminId = sessionStorage.getItem('admin_id') || localStorage.getItem('admin_id') || 1;
+      try {
+        const payload = {
+          admin_name: `${profileData.firstName} ${profileData.lastName}`.trim(),
+          admin_email: profileData.email
+        };
+        if (profileData.password) {
+          payload.admin_password = profileData.password;
+        }
+        
+        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const profile = await this.getAdminProfile();
+          const updated = { ...profile, ...profileData };
+          setDBItem('profile', updated);
+          return updated;
+        } else {
+          console.error('Update failed with status:', response.status);
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
+      // Fallback update
+      const profile = await this.getAdminProfile();
       const updated = { ...profile, ...profileData };
       setDBItem('profile', updated);
       return updated;

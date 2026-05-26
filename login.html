@@ -64,6 +64,7 @@
   </div>
 
   <!-- core scripts -->
+  <script src="assets/js/config.js"></script>
   <script src="assets/js/api.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/auth.js"></script>
@@ -78,7 +79,7 @@
       const alertBox = document.getElementById('login-alert-box');
       const alertMessage = document.getElementById('login-alert-message');
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // 1. Audit fields
@@ -91,7 +92,8 @@
         const password = passwordInput.value;
         const rememberMe = rememberCheckbox.checked;
 
-        const authResult = Auth.login(email, password, rememberMe);
+        // Show loading state optionally here
+        const authResult = await Auth.login(email, password, rememberMe);
 
         if (authResult.success) {
           showToast('Administrative login verified. Welcome back!', 'success');
