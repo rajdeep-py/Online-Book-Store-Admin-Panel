@@ -177,9 +177,10 @@
     if (!book) return;
 
     const modalHTML = `
-      <div class="form-group">
+      <div class="form-group text-center">
+        <img src="${book.cover}" alt="Cover" style="max-height: 120px; border-radius: var(--radius-sm); margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
         <p>Current stock levels: <strong>${book.stock}</strong> units.</p>
-        <label class="form-label" for="restock-qty-input">Enter units to ADD to stock:</label>
+        <label class="form-label" for="restock-qty-input" style="text-align: left;">Enter units to ADD to stock:</label>
         <input type="number" id="restock-qty-input" class="form-control" min="1" max="500" value="20" required>
       </div>
     `;
