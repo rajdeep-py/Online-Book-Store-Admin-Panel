@@ -35,6 +35,26 @@
 
   // PUBLIC API INTERFACE
   window.BookstoreAPI = {
+    _resolveBookCoverUrl: function (coverPath) {
+      if (!coverPath) {
+        return 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&q=80';
+      }
+
+      if (/^(https?:|data:|blob:)/i.test(coverPath)) {
+        return coverPath;
+      }
+
+      if (coverPath.startsWith('/book_store_backend')) {
+        return `http://localhost:8080${coverPath}`;
+      }
+
+      if (coverPath.startsWith('/')) {
+        return `http://localhost:8080/book_store_backend${coverPath}`;
+      }
+
+      return `http://localhost:8080/book_store_backend/${coverPath}`;
+    },
+
     // ------------------------------------------------------------------------
     // 📚 BOOKS INVENTORY ENDPOINTS
     // ------------------------------------------------------------------------
@@ -94,7 +114,7 @@
         });
         if (response.ok) {
           const data = await response.json();
-          const result = { ...book, id: data.book_id, cover: data.book_photo || '' };
+          const result = { ...book, id: data.book_id, cover: this._resolveBookCoverUrl(data.book_photo) };
           await this.getBooks(); // Re-sync local cache
           return result;
         }
@@ -126,8 +146,9 @@
           credentials: 'include'
         });
         if (response.ok) {
+          const data = await response.json();
           await this.getBooks(); // Re-sync local cache
-          return { id, ...updatedFields };
+          return { id, ...updatedFields, cover: this._resolveBookCoverUrl(data.book_photo) };
         }
       } catch (error) {
         console.error('Error updating book details on backend:', error);
@@ -152,9 +173,7 @@
     },
 
     _mapBookToFrontend: function (b) {
-      const coverUrl = b.book_photo 
-        ? (b.book_photo.startsWith('http') ? b.book_photo : `http://localhost:8080/book_store_backend${b.book_photo}`) 
-        : 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&q=80';
+      const coverUrl = this._resolveBookCoverUrl(b.book_photo);
       return {
         id: b.book_id,
         title: b.book_name,

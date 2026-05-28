@@ -26,8 +26,8 @@
 
     // 1. Gather Metrics data
     const books = await BookstoreAPI.getBooks();
-    const orders = BookstoreAPI.getOrders();
-    const customers = BookstoreAPI.getCustomers();
+    const orders = await BookstoreAPI.getOrders();
+    const customers = await BookstoreAPI.getCustomers();
     const analytics = await BookstoreAPI.getAnalytics();
 
     // 2. Populate Metrics Cards

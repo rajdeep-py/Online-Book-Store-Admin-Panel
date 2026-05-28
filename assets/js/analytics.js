@@ -17,13 +17,13 @@
     }, 450);
   });
 
-  function initializeAnalyticsView() {
+  async function initializeAnalyticsView() {
     if (!window.BookstoreAPI) return;
 
     // 1. Gather aggregates
-    const analytics = BookstoreAPI.getAnalytics();
-    const orders = BookstoreAPI.getOrders();
-    const books = BookstoreAPI.getBooks();
+    const analytics = await BookstoreAPI.getAnalytics();
+    const orders = await BookstoreAPI.getOrders();
+    const books = await BookstoreAPI.getBooks();
 
     // 2. Populate Metrics boxes
     const revenueVal = document.getElementById('analytic-revenue');
