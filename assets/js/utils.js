@@ -186,7 +186,7 @@
       </div>
       <nav class="sidebar-menu">
         <ul class="menu-list">
-          <li class="menu-item ${activePage === 'dashboard' ? 'active' : ''}">
+          <li class="menu-item ${activePage === 'index' || activePage === '' ? 'active' : ''}">
             <a href="index.html" class="menu-link">
               <i class="fas fa-chart-line menu-icon"></i>
               <span class="menu-text">Dashboard</span>
