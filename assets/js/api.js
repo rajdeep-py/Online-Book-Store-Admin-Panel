@@ -686,6 +686,48 @@
       } catch (error) {
         this._handleFetchError(error);
       }
+    },
+
+    // ------------------------------------------------------------------------
+    // 🏢 COMPANY PORTFOLIO
+    // ------------------------------------------------------------------------
+    getPortfolio: async function () {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ABOUT}`), {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          // The API returns an items array for getAll()
+          return data.items && data.items.length > 0 ? data.items[0] : null;
+        } else {
+          this._handleFetchError(new Error(`Failed to fetch portfolio: ${response.statusText}`));
+        }
+      } catch (error) {
+        this._handleFetchError(error);
+      }
+    },
+    
+    updatePortfolio: async function (id, payload) {
+      try {
+        // If ID is provided, use PUT, otherwise use POST if no existing record
+        const method = id ? 'PUT' : 'POST';
+        const url = id 
+          ? `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ABOUT}/${id}`
+          : `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ABOUT}`;
+          
+        const response = await fetch(this._getSessionUrl(url), {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'include'
+        });
+        
+        if (response.ok) return true;
+        this._handleFetchError(new Error(`Failed to update portfolio: ${response.statusText}`));
+      } catch (error) {
+        this._handleFetchError(error);
+      }
     }
   };
 })();

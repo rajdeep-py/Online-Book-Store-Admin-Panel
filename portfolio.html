@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Portfolio - Book Heaven Storefront Manager</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <style>
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .image-upload-wrapper {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+    .image-upload-wrapper:hover {
+      border-color: var(--primary-color);
+      background-color: var(--primary-light);
+    }
+    .image-preview {
+      max-width: 200px;
+      max-height: 200px;
+      margin-top: 1rem;
+      border-radius: var(--radius-sm);
+      display: none;
+    }
+    .partner-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: var(--bg-secondary);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .partner-fields {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+  </style>
+
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Company Portfolio</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Portfolio</li>
+            </ul>
+          </div>
+          <div class="page-actions-block">
+            <button class="btn btn-primary" id="save-portfolio-btn">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-2-col">
+          <!-- Main Info Card -->
+          <div class="card p-4">
+            <h3 class="mb-4 border-bottom pb-2">Core Identity</h3>
+            <form id="portfolio-form">
+              <input type="hidden" id="about-id">
+              
+              <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input type="text" id="company-name" class="form-control" placeholder="Book Heaven">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tagline</label>
+                <input type="text" id="company-tagline" class="form-control" placeholder="Your Ultimate Book Store">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Company Description</label>
+                <textarea id="company-description" class="form-control" placeholder="Enter full company description..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Mission Statement</label>
+                <textarea id="company-mission" class="form-control" placeholder="Our mission is..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Vision Statement</label>
+                <textarea id="company-vision" class="form-control" placeholder="Our vision is..."></textarea>
+              </div>
+            </form>
+          </div>
+
+          <!-- Secondary Info Card -->
+          <div class="card p-4">
+            <h3 class="mb-4 border-bottom pb-2">Contact & Assets</h3>
+            
+            <div class="form-group">
+              <label class="form-label">Company Logo</label>
+              <div class="image-upload-wrapper" id="logo-upload-wrapper">
+                <i class="fas fa-cloud-upload-alt fa-3x mb-2 text-muted"></i>
+                <p>Click to upload new company logo</p>
+                <input type="file" id="logo-input" accept="image/*" style="display: none;">
+                <img id="logo-preview" src="assets/images/logos/logo.png" alt="Logo Preview" class="image-preview" style="display: inline-block;">
+              </div>
+              <small class="text-muted mt-2 d-block">Note: Uploading a new logo will instantly update the sidebar.</small>
+            </div>
+
+            <div class="form-group mt-4">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" id="company-phone" class="form-control" placeholder="+1 (555) 123-4567">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Contact Email</label>
+              <input type="email" id="company-email" class="form-control" placeholder="contact@bookheaven.com">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Physical Address</label>
+              <textarea id="company-address" class="form-control" style="min-height: 80px;" placeholder="123 Library St, NY..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partners Card -->
+        <div class="card p-4 mt-4">
+          <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+            <h3>Partners & Sponsors</h3>
+            <button class="btn btn-secondary btn-sm" id="add-partner-btn">
+              <i class="fas fa-plus"></i> Add Partner
+            </button>
+          </div>
+          
+          <div id="partners-container">
+            <!-- Dynamic partner cards will be injected here -->
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Site Global Footer -->
+      <footer id="footer-container" class="main-footer"></footer>
+
+    </div>
+  </div>
+
+  <!-- core framework components -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  
+  <!-- page specific initializers and route controller scripts -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/portfolio.js"></script>
+</body>
+</html>
