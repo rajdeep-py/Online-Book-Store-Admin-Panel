@@ -550,6 +550,88 @@
     },
 
     // ------------------------------------------------------------------------
+    // 💰 EARNING CHARGES
+    // ------------------------------------------------------------------------
+    getCharges: async function () {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CHARGES}`), {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          return data.items || [];
+        }
+      } catch (error) {
+        console.error('Error fetching charges:', error);
+      }
+      return [];
+    },
+
+    getChargeById: async function (id) {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CHARGES}/${id}`), {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (error) {
+        console.error('Error fetching charge by id:', error);
+      }
+      return null;
+    },
+
+    createCharge: async function (chargeData) {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CHARGES}`), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(chargeData),
+          credentials: 'include'
+        });
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (error) {
+        console.error('Error creating charge:', error);
+      }
+      return null;
+    },
+
+    updateCharge: async function (id, chargeData) {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CHARGES}/${id}`), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(chargeData),
+          credentials: 'include'
+        });
+        if (response.ok) {
+          return true;
+        }
+      } catch (error) {
+        console.error('Error updating charge:', error);
+      }
+      return false;
+    },
+
+    deleteCharge: async function (id) {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CHARGES}/${id}`), {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          return true;
+        }
+      } catch (error) {
+        console.error('Error deleting charge:', error);
+      }
+      return false;
+    },
+
+
+    // ------------------------------------------------------------------------
     // 📊 CALCULATED ANALYTICS FOR DASHBOARD
     // ------------------------------------------------------------------------
     getAnalytics: async function () {

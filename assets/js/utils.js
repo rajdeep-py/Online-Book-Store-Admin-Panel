@@ -222,6 +222,12 @@
               <span class="menu-text">Analytics</span>
             </a>
           </li>
+          <li class="menu-item ${activePage === 'charges' ? 'active' : ''}">
+            <a href="charges.html" class="menu-link">
+              <i class="fas fa-money-bill-wave menu-icon"></i>
+              <span class="menu-text">Charges</span>
+            </a>
+          </li>
 
           <li class="menu-item logout-item">
             <a href="#" id="sidebar-logout-btn" class="menu-link">

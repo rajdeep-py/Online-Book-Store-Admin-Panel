@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earning Charges Management - Book Heaven Admin</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/sidebar.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/cards.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  
+  <!-- Font Awesome Icons & Google Fonts Outfit -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Container -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <div class="main-content">
+      
+      <!-- Top Sticky Navbar Header -->
+      <header id="navbar-container" class="navbar"></header>
+
+      <main class="content-body">
+        
+        <!-- Breadcrumbs Navigation -->
+        <div class="page-header">
+          <div class="page-title-block">
+            <h1>Earning Charges Management</h1>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Charges</li>
+            </ul>
+          </div>
+          <div class="page-actions-block">
+            <button class="btn btn-primary" id="add-charge-btn">
+              <i class="fas fa-plus"></i> Create New Charge Profile
+            </button>
+          </div>
+        </div>
+
+        <div class="card table-card slide-up">
+          <div class="card-header">
+            <h3>Configured Charge Profiles</h3>
+          </div>
+          
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table hover-table align-middle">
+                <thead>
+                  <tr>
+                    <th>Charge ID</th>
+                    <th>Platform Fee</th>
+                    <th>Delivery Fee</th>
+                    <th>Taxes (%)</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="charges-table-body">
+                  <!-- JS Data rows go here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="card-footer table-footer">
+            <div class="pagination-info" id="pagination-info-label"></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+  
+  <!-- Modal Overlay Container -->
+  <div id="modal-container"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/charges.js"></script>
+</body>
+</html>
