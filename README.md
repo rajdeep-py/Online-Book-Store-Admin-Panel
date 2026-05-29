@@ -6,7 +6,7 @@ This production-ready storefront control panel is built using **ONLY HTML5, CSS3
 
 ---
 
-## 📸 visual interface preview
+## 📸 Visual Interface Preview
 
 Below is a live screenshot of the console's **Stock Levels Warning Center** showing custom styling, Outfit/Inter typography, stats metrics cards, horizontal filter tabs, status badges, and action triggers under the dark mode theme:
 
@@ -35,16 +35,25 @@ The bookstore admin panel is divided into 15 cohesive administrative views:
 
 ---
 
-## 🛠 Stateful Relational Database Layer
+## 🛠 Developer Guide & Internal Architecture
 
+### 1. Architecture Philosophy
+1. **Modularity**: HTML, CSS, and JS are split into highly cohesive, single-responsibility files.
+2. **Offline/Local Resilience**: The app functions flawlessly over the `file://` protocol without a web server.
+3. **Hybrid API Bridge**: seamlessly switches between a live Jakarta Tomcat 11 backend and a local `localStorage` stateful cache.
+
+### 2. The Hybrid API Bridge (`api.js`)
 To operate out-of-the-box in double-click local mode (`file://` scheme) without requiring an active backend or a SQL engine, the portal integrates an interactive stateful API layer inside [api.js](assets/js/api.js):
-- On the first load, the database checks the browser's `localStorage`; if empty, it seeds **30 detailed Books, 20 Customers, 50 structured Orders, and 10 Notifications**.
-- Data models are fully relational. For example, placing a new order or suspending a client updates their historical transactions, spent aggregates, and system stock levels in real time.
-- All actions (deletes, modifications, creations) persist immediately in `localStorage` across page navigations.
+- **Fetch Attempt**: The app attempts to fetch data from the Tomcat backend using session cookies (`jsessionid`).
+- **Fallback Catch**: If the fetch fails (CORS error, server offline, or running locally), the `.catch()` block intercepts the failure and retrieves data from `localStorage`.
+- **Seeding**: On first load, if `localStorage` is empty, it automatically seeds 30 Books, 20 Customers, 50 Orders, and Notifications.
 
-### 🛡 Hybrid CORS-Resilient Loader
-Standard multi-page dashboards use AJAX to fetch headers and footers. However, when files are opened directly from a local disk (`file://`), browsers block local requests due to CORS security rules. 
-Our loader inside [utils.js](assets/js/utils.js) checks the active protocol; if `file://` is detected, it instantly injects built-in ES6 template literals instead, enabling a **server-free, double-click preview**. On a web server, it dynamically fetches separate `.html` component files.
+### 3. Global UI Utilities (`utils.js`)
+To keep the application DRY, [utils.js](assets/js/utils.js) exposes global window functions:
+- **`window.showToast(message, type)`**: Spawns non-blocking floating notifications (`success`, `warning`, `danger`, `info`).
+- **`window.showLoader()` & `window.hideLoader()`**: Manages a full-screen loading overlay.
+- **`window.createModal(options)`**: Spawns accessible, dynamic modals with custom titles, HTML bodies, and callback-bound action buttons.
+- **`window.loadCommonComponents(activePage)`**: Hybrid loader for Partials (Sidebar, Navbar, Footer). Standard multi-page dashboards use AJAX to fetch headers and footers. However, when files are opened directly from a local disk (`file://`), browsers block local requests due to CORS security rules. This function checks the active protocol; if `file://` is detected, it instantly injects built-in ES6 template literals instead, enabling a **server-free, double-click preview**.
 
 ---
 
@@ -73,11 +82,11 @@ admin_frontend/
 │
 ├── components/                  # Reusable HTML Component Templates
 │   ├── sidebar.html             # Layout Navigation Drawer
-│   ├── navbar.html              # sticky Header with Bell & Search
+│   ├── navbar.html              # Sticky Header with Bell & Search
 │   ├── footer.html              # Brand Footer
 │   ├── stats-card.html          # Metric card template skeleton
 │   ├── order-table.html         # Transaction grid skeleton
-│   ├── customer-table.html      # customer list skeleton
+│   ├── customer-table.html      # Customer list skeleton
 │   ├── loader.html              # Global Screen Loading spinner overlay
 │   ├── modal.html               # Reusable dynamic Modal popup container
 │   └── toast.html               # Floating micro-notifications container
@@ -92,14 +101,14 @@ admin_frontend/
     │   ├── customers.json       # 20 starting Customers
     │   ├── orders.json          # 50 starting Orders
     │   ├── analytics.json       # Compiled aggregate trends
-    │   └── notifications.json   # starting unread alerts
+    │   └── notifications.json   # Starting unread alerts
     │
     ├── css/                     # Premium Design Stylesheets
     │   ├── utilities.css        # Visual Tokens, Color Resets, Badge styles
     │   ├── animations.css       # Keyframes for loaders, slides, and pulses
     │   ├── style.css            # Base Layouts, Breadcrumbs, Buttons, Modals
-    │   ├── sidebar.css          # Navigation drawers drawer & Collapsible icons
-    │   ├── navbar.css           #sticky Top-Header, global Search bar
+    │   ├── sidebar.css          # Navigation drawers & Collapsible icons
+    │   ├── navbar.css           # Sticky Top-Header, global Search bar
     │   ├── cards.css            # Metric panels & List summaries
     │   ├── tables.css           # Scrollable grids, Pagination page controls
     │   ├── forms.css            # Grid inputs, validations error markers
@@ -114,7 +123,7 @@ admin_frontend/
         ├── auth.js              # Token Guard checking Session credentials
         ├── validation.js        # Dynamic HTML form validators
         ├── main.js              # Entry routing co-ordinator
-        ├── dashboard.js         # dashboard page controller (binds counts)
+        ├── dashboard.js         # Dashboard page controller (binds counts)
         ├── charts.js            # Chart.js rendering wrapper configurations
         ├── customers.js         # Customers page search & profile loader
         ├── orders.js            # Orders tabs and state machine fulfillment
@@ -147,12 +156,18 @@ If you prefer running the project over an HTTP network server to test modular im
 npx -y serve ./
 
 # Or using Python's built-in web server
-python -m http.server 8000
+python3 -m http.server 8000
 
 # Or using PHP
 php -S localhost:8000
 ```
 Then, open your web browser and navigate to: `http://localhost:8000/login.html` (or the port specified by your tool).
+
+#### Option C: Full Stack Mode (with Tomcat)
+To test live API endpoints:
+1. Ensure the Java Spring/Tomcat backend is running at `http://localhost:8080/book_store_backend`.
+2. Serve this frontend on a local port.
+3. The `api.js` endpoints will automatically hit the backend and map session cookies.
 
 ---
 
@@ -163,6 +178,11 @@ To log in to the secure bookstore administrator panel:
 | Username / Email | Password | Access Rights |
 | :--- | :--- | :--- |
 | **`admin@bookheaven.com`** | **`admin123`** | Super Administrator (Full CRUD & Fulfilment Control) |
+
+---
+
+## 👥 Development Team
+- **Rajdeep Dey** (<rajdeep.dey.fiem.bca23@teamfuture.in>)
 
 ---
 

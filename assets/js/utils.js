@@ -496,4 +496,21 @@
     }
   };
 
+  // Global Image Error Handler for Fallbacks
+  document.addEventListener('error', function(event) {
+    if (event.target && event.target.tagName === 'IMG') {
+      const img = event.target;
+      if (img.dataset.fallbackApplied) return; // Prevent infinite loop
+      img.dataset.fallbackApplied = "true";
+
+      const isUser = img.classList.contains('table-user-img') || 
+                     img.classList.contains('user-avatar-img') || 
+                     img.classList.contains('nav-profile-img') || 
+                     (img.alt && img.alt.toLowerCase().includes('avatar')) ||
+                     (img.alt && img.alt.toLowerCase().includes('admin'));
+      
+      img.src = isUser ? 'assets/images/icons/user.png' : 'assets/images/icons/book.png';
+    }
+  }, true); // Use capture phase
+
 })();

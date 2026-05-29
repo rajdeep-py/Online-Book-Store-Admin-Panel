@@ -1,63 +1,28 @@
 /**
- * api.js - Live API Bridge with LocalStorage Fallback Cache
+ * api.js - Live API Bridge
  * Provides high-performance fetch integrations with Jakarta Tomcat 11
- * while maintaining compatibility with local visual rendering layouts.
  */
 
 (function () {
-  const DB_PREFIX = 'bookstore_admin_';
-
-  // Seed functions for local storage fallbacks (if database services are offline)
-  function getPastDate(daysAgo) {
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo);
-    return date.toISOString().split('T')[0];
-  }
-
-  function initializeFallbackDatabase() {
-    console.log('Seeding Local Cache Fallbacks...');
-    const categories = ['Fiction', 'Non-Fiction', 'Sci-Fi', 'Biography', 'Self-Help', 'Business', 'Technology', 'Mystery'];
-    localStorage.setItem(DB_PREFIX + 'categories', JSON.stringify(categories));
-    localStorage.setItem(DB_PREFIX + 'initialized', 'true');
-  }
-
-  if (!localStorage.getItem(DB_PREFIX + 'initialized')) {
-    initializeFallbackDatabase();
-  }
-
-  function getDBItem(key) {
-    return JSON.parse(localStorage.getItem(DB_PREFIX + key));
-  }
-
-  function setDBItem(key, data) {
-    localStorage.setItem(DB_PREFIX + key, JSON.stringify(data));
-  }
-
   // PUBLIC API INTERFACE
   window.BookstoreAPI = {
     _resolveBookCoverUrl: function (coverPath) {
-      if (!coverPath) {
-        return 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&q=80';
-      }
-
-      if (/^(https?:|data:|blob:)/i.test(coverPath)) {
-        return coverPath;
-      }
-
-      if (coverPath.startsWith('/book_store_backend')) {
-        return `http://localhost:8080${coverPath}`;
-      }
-
-      if (coverPath.startsWith('/')) {
-        return `http://localhost:8080/book_store_backend${coverPath}`;
-      }
-
+      if (!coverPath) return 'assets/images/icons/book.png';
+      if (/^(https?:|data:|blob:)/i.test(coverPath)) return coverPath;
+      if (coverPath.startsWith('/book_store_backend')) return `http://localhost:8080${coverPath}`;
+      if (coverPath.startsWith('/')) return `http://localhost:8080/book_store_backend${coverPath}`;
       return `http://localhost:8080/book_store_backend/${coverPath}`;
     },
 
     _getSessionUrl: function (url) {
       const sessionId = sessionStorage.getItem('bookheaven_admin_session_id') || localStorage.getItem('bookheaven_admin_session_id');
       return sessionId ? `${url};jsessionid=${sessionId}` : url;
+    },
+
+    _handleFetchError: function(error) {
+      console.error('API Connection Failed:', error);
+      window.location.href = 'error.html';
+      throw error;
     },
 
     // ------------------------------------------------------------------------
@@ -72,14 +37,13 @@
         if (response.ok) {
           const data = await response.json();
           const items = data.items || data;
-          const mapped = items.map(b => this._mapBookToFrontend(b));
-          setDBItem('books', mapped); // Cache locally for offline graphing
-          return mapped;
+          return items.map(b => this._mapBookToFrontend(b));
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch books: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Database connection failed. Using local cache. Error:', error);
+        this._handleFetchError(error);
       }
-      return getDBItem('books') || [];
     },
 
     getBookById: async function (id) {
@@ -88,12 +52,12 @@
         if (response.ok) {
           const data = await response.json();
           return this._mapBookToFrontend(data);
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch book: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error fetching book:', error);
+        this._handleFetchError(error);
       }
-      const books = getDBItem('books') || [];
-      return books.find(b => b.id == id) || null;
     },
 
     addBook: async function (book) {
@@ -107,10 +71,7 @@
         formData.append('price', parseFloat(book.price) || 0);
         formData.append('discount_percent', parseFloat(book.discount) || 0);
         formData.append('stock_amount', parseInt(book.stock) || 0);
-        
-        if (book.coverFile) {
-          formData.append('book_photo', book.coverFile);
-        }
+        if (book.coverFile) formData.append('book_photo', book.coverFile);
 
         const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}`), {
           method: 'POST',
@@ -119,14 +80,13 @@
         });
         if (response.ok) {
           const data = await response.json();
-          const result = { ...book, id: data.book_id, cover: this._resolveBookCoverUrl(data.book_photo) };
-          await this.getBooks(); // Re-sync local cache
-          return result;
+          return { ...book, id: data.book_id, cover: this._resolveBookCoverUrl(data.book_photo) };
+        } else {
+            this._handleFetchError(new Error(`Failed to add book: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error adding book to backend:', error);
+        this._handleFetchError(error);
       }
-      return null;
     },
 
     updateBook: async function (id, updatedFields) {
@@ -140,10 +100,7 @@
         formData.append('price', parseFloat(updatedFields.price) || 0);
         formData.append('discount_percent', parseFloat(updatedFields.discount) || 0);
         formData.append('stock_amount', parseInt(updatedFields.stock) || 0);
-        
-        if (updatedFields.coverFile) {
-          formData.append('book_photo', updatedFields.coverFile);
-        }
+        if (updatedFields.coverFile) formData.append('book_photo', updatedFields.coverFile);
 
         const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`), {
           method: 'PUT',
@@ -152,13 +109,13 @@
         });
         if (response.ok) {
           const data = await response.json();
-          await this.getBooks(); // Re-sync local cache
           return { id, ...updatedFields, cover: this._resolveBookCoverUrl(data.book_photo) };
+        } else {
+            this._handleFetchError(new Error(`Failed to update book: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error updating book details on backend:', error);
+        this._handleFetchError(error);
       }
-      return null;
     },
 
     deleteBook: async function (id) {
@@ -167,14 +124,11 @@
           method: 'DELETE',
           credentials: 'include'
         });
-        if (response.ok) {
-          await this.getBooks(); // Re-sync local cache
-          return true;
-        }
+        if (response.ok) return true;
+        this._handleFetchError(new Error(`Failed to delete book: ${response.statusText}`));
       } catch (error) {
-        console.error('Error deleting book from backend:', error);
+        this._handleFetchError(error);
       }
-      return false;
     },
 
     _mapBookToFrontend: function (b) {
@@ -205,7 +159,6 @@
           const data = await response.json();
           const items = data.items || data;
           
-          // Also fetch orders for calculation
           const ordersResponse = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}`), { credentials: 'include' });
           let allOrders = [];
           if (ordersResponse.ok) {
@@ -213,20 +166,19 @@
              allOrders = oData.items || [];
           }
 
-          const mapped = items.map(c => {
+          return items.map(c => {
              const mappedCustomer = this._mapCustomerToFrontend(c);
              const custOrders = allOrders.filter(o => o.customer_id === c.customer_id);
              mappedCustomer.ordersCount = custOrders.length;
              mappedCustomer.totalSpent = custOrders.reduce((sum, o) => sum + (o.total_bill_amount || 0), 0);
              return mappedCustomer;
           });
-          setDBItem('customers', mapped);
-          return mapped;
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch customers: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error loading customers from database:', error);
+        this._handleFetchError(error);
       }
-      return getDBItem('customers') || [];
     },
 
     getCustomerById: async function (id) {
@@ -235,12 +187,12 @@
         if (response.ok) {
           const data = await response.json();
           return this._mapCustomerToFrontend(data);
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch customer: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error fetching customer profile:', error);
+        this._handleFetchError(error);
       }
-      const list = getDBItem('customers') || [];
-      return list.find(c => c.id == id) || null;
     },
 
     updateCustomer: async function (id, updatedFields) {
@@ -250,30 +202,23 @@
         formData.append('email', updatedFields.email);
         formData.append('phone_number', updatedFields.phone || '');
         formData.append('address', updatedFields.address || '');
-        if (updatedFields.avatarFile) {
-          formData.append('profile_photo', updatedFields.avatarFile);
-        }
-        if (updatedFields.password) {
-          formData.append('password', updatedFields.password);
-        }
+        if (updatedFields.avatarFile) formData.append('profile_photo', updatedFields.avatarFile);
+        if (updatedFields.password) formData.append('password', updatedFields.password);
 
         const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}/${id}`), {
           method: 'PUT',
           body: formData,
           credentials: 'include'
         });
-        if (response.ok) {
-          await this.getCustomers();
-          return { id, ...updatedFields };
-        }
+        if (response.ok) return { id, ...updatedFields };
+        this._handleFetchError(new Error(`Failed to update customer: ${response.statusText}`));
       } catch (error) {
-        console.error('Error updating customer profile:', error);
+        this._handleFetchError(error);
       }
-      return null;
     },
 
     _mapCustomerToFrontend: function (c) {
-      let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.full_name)}&background=random&color=fff&size=128`;
+      let avatarUrl = 'assets/images/icons/user.png';
       if (c.profile_photo) {
         if (c.profile_photo.startsWith('http')) avatarUrl = c.profile_photo;
         else if (c.profile_photo.startsWith('/book_store_backend')) avatarUrl = `http://localhost:8080${c.profile_photo}`;
@@ -310,7 +255,7 @@
              (cData.items || []).forEach(c => { custMap[c.customer_id] = c; });
           }
 
-          const mapped = items.map(o => {
+          return items.map(o => {
              const mOrder = this._mapOrderToFrontend(o);
              if (custMap[o.customer_id]) {
                 mOrder.customerName = custMap[o.customer_id].full_name;
@@ -320,13 +265,12 @@
              }
              return mOrder;
           });
-          setDBItem('orders', mapped);
-          return mapped;
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch orders: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error loading orders from database:', error);
+        this._handleFetchError(error);
       }
-      return getDBItem('orders') || [];
     },
 
     getOrderById: async function (id) {
@@ -335,18 +279,18 @@
         if (response.ok) {
           const data = await response.json();
           return this._mapOrderToFrontend(data);
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch order: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error fetching order summary:', error);
+        this._handleFetchError(error);
       }
-      const list = getDBItem('orders') || [];
-      return list.find(o => o.id == id) || null;
     },
 
     updateOrderStatus: async function (id, status) {
       try {
         const getRes = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}/${id}`), { credentials: 'include' });
-        if (!getRes.ok) return false;
+        if (!getRes.ok) this._handleFetchError(new Error(`Failed to fetch order for update: ${getRes.statusText}`));
         const rawOrder = await getRes.json();
 
         const backendStatusMap = {
@@ -367,14 +311,11 @@
           body: JSON.stringify(rawOrder),
           credentials: 'include'
         });
-        if (response.ok) {
-          await this.getOrders();
-          return true;
-        }
+        if (response.ok) return true;
+        this._handleFetchError(new Error(`Failed to update order status: ${response.statusText}`));
       } catch (error) {
-        console.error('Error updating order status:', error);
+        this._handleFetchError(error);
       }
-      return false;
     },
 
     _mapOrderToFrontend: function (o) {
@@ -425,22 +366,21 @@
     getCategories: async function () {
       const books = await this.getBooks();
       const categories = [...new Set(books.map(b => b.category))];
-      setDBItem('categories', categories);
       return categories;
     },
 
     // ------------------------------------------------------------------------
-    // 🔔 NOTIFICATIONS ENDPOINTS
+    // 🔔 NOTIFICATIONS ENDPOINTS (Stored exclusively locally as per design)
     // ------------------------------------------------------------------------
     getNotifications: function () {
-      return getDBItem('notifications') || [];
+      return JSON.parse(localStorage.getItem('bookstore_admin_notifications')) || [];
     },
     markNotificationRead: function (id) {
       const notifications = this.getNotifications();
       const idx = notifications.findIndex(n => n.id === id);
       if (idx !== -1) {
         notifications[idx].read = true;
-        setDBItem('notifications', notifications);
+        localStorage.setItem('bookstore_admin_notifications', JSON.stringify(notifications));
       }
       return notifications;
     },
@@ -448,15 +388,10 @@
       const notifications = this.getNotifications();
       const nextId = `NTF-${String(notifications.length + 1).padStart(3, '0')}`;
       const newNotif = {
-        id: nextId,
-        type,
-        title,
-        message,
-        time: 'Just now',
-        read: false
+        id: nextId, type, title, message, time: 'Just now', read: false
       };
       notifications.unshift(newNotif);
-      setDBItem('notifications', notifications);
+      localStorage.setItem('bookstore_admin_notifications', JSON.stringify(notifications));
       return newNotif;
     },
 
@@ -473,30 +408,22 @@
         if (response.ok) {
           const data = await response.json();
           const nameParts = (data.admin_name || 'Admin User').split(' ');
-          const profile = {
+          return {
             firstName: nameParts[0] || '',
             lastName: nameParts.slice(1).join(' ') || '',
             name: data.admin_name || 'Admin User',
             email: data.admin_email || '',
             phone: '+1 (555) 019-2834',
             bio: 'Managing and designing visual systems for the Book Heaven brand.',
-            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.admin_name || 'Admin User')}&size=128`,
+            avatar: data.profile_photo || 'assets/images/icons/user.png',
             role: 'Super Administrator'
           };
-          setDBItem('profile', profile);
-          return profile;
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch admin profile: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error fetching admin profile from backend:', error);
+        this._handleFetchError(error);
       }
-      return getDBItem('profile') || {
-        firstName: 'Sophia',
-        lastName: 'Vance',
-        name: 'Sophia Vance',
-        email: 'admin@bookheaven.com',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80',
-        role: 'Super Administrator'
-      };
     },
 
     updateAdminProfile: async function (profileData) {
@@ -506,9 +433,7 @@
           admin_name: `${profileData.firstName} ${profileData.lastName}`.trim(),
           admin_email: profileData.email
         };
-        if (profileData.password) {
-          payload.admin_password = profileData.password;
-        }
+        if (profileData.password) payload.admin_password = profileData.password;
 
         const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`), {
           method: 'PUT',
@@ -519,21 +444,20 @@
 
         if (response.ok) {
           const profile = await this.getAdminProfile();
-          const updated = { ...profile, ...profileData };
-          setDBItem('profile', updated);
-          return updated;
+          return { ...profile, ...profileData };
+        } else {
+            this._handleFetchError(new Error(`Failed to update admin profile: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error updating admin profile on backend:', error);
+        this._handleFetchError(error);
       }
-      return null;
     },
 
     // ------------------------------------------------------------------------
-    // ⚙️ GLOBAL PREFERENCES / SETTINGS
+    // ⚙️ GLOBAL PREFERENCES / SETTINGS (Stored exclusively locally)
     // ------------------------------------------------------------------------
     getSettings: function () {
-      return getDBItem('settings') || {
+      return JSON.parse(localStorage.getItem('bookstore_admin_settings')) || {
         siteName: 'Book Heaven Admin',
         emailNotifications: true,
         lowStockThreshold: 10,
@@ -545,7 +469,7 @@
     updateSettings: function (settingsData) {
       const settings = this.getSettings();
       const updated = { ...settings, ...settingsData };
-      setDBItem('settings', updated);
+      localStorage.setItem('bookstore_admin_settings', JSON.stringify(updated));
       return updated;
     },
 
@@ -560,11 +484,12 @@
         if (response.ok) {
           const data = await response.json();
           return data.items || [];
+        } else {
+            this._handleFetchError(new Error(`Failed to fetch charges: ${response.statusText}`));
         }
       } catch (error) {
-        console.error('Error fetching charges:', error);
+        this._handleFetchError(error);
       }
-      return [];
     },
 
     getChargeById: async function (id) {
@@ -572,13 +497,11 @@
         const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CHARGES}/${id}`), {
           credentials: 'include'
         });
-        if (response.ok) {
-          return await response.json();
-        }
+        if (response.ok) return await response.json();
+        this._handleFetchError(new Error(`Failed to fetch charge: ${response.statusText}`));
       } catch (error) {
-        console.error('Error fetching charge by id:', error);
+        this._handleFetchError(error);
       }
-      return null;
     },
 
     createCharge: async function (chargeData) {
@@ -589,13 +512,11 @@
           body: JSON.stringify(chargeData),
           credentials: 'include'
         });
-        if (response.ok) {
-          return await response.json();
-        }
+        if (response.ok) return await response.json();
+        this._handleFetchError(new Error(`Failed to create charge: ${response.statusText}`));
       } catch (error) {
-        console.error('Error creating charge:', error);
+        this._handleFetchError(error);
       }
-      return null;
     },
 
     updateCharge: async function (id, chargeData) {
@@ -606,13 +527,11 @@
           body: JSON.stringify(chargeData),
           credentials: 'include'
         });
-        if (response.ok) {
-          return true;
-        }
+        if (response.ok) return true;
+        this._handleFetchError(new Error(`Failed to update charge: ${response.statusText}`));
       } catch (error) {
-        console.error('Error updating charge:', error);
+        this._handleFetchError(error);
       }
-      return false;
     },
 
     deleteCharge: async function (id) {
@@ -621,15 +540,12 @@
           method: 'DELETE',
           credentials: 'include'
         });
-        if (response.ok) {
-          return true;
-        }
+        if (response.ok) return true;
+        this._handleFetchError(new Error(`Failed to delete charge: ${response.statusText}`));
       } catch (error) {
-        console.error('Error deleting charge:', error);
+        this._handleFetchError(error);
       }
-      return false;
     },
-
 
     // ------------------------------------------------------------------------
     // 📊 CALCULATED ANALYTICS FOR DASHBOARD
@@ -637,6 +553,8 @@
     getAnalytics: async function () {
       const books = await this.getBooks();
       const ordersList = await this.getOrders();
+      if (!books || !ordersList) return null; // Let the handleFetchError catch it
+
       const orders = ordersList.filter(o => o.status !== 'Cancelled');
       const allOrders = ordersList;
 
@@ -646,7 +564,6 @@
       const monthlySalesMap = {};
       months.forEach(m => { monthlySalesMap[m] = { revenue: 0, orders: 0 }; });
 
-      // Hardcoded base months for historical graphing realism
       monthlySalesMap['Dec'] = { revenue: 7850.40, orders: 198 };
       monthlySalesMap['Jan'] = { revenue: 9230.15, orders: 220 };
       monthlySalesMap['Feb'] = { revenue: 8400.90, orders: 205 };

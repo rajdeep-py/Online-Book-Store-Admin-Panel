@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error - Book Heaven</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/utilities.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            background-color: var(--bg-primary);
+            padding: 2rem;
+        }
+
+        .error-icon {
+            font-size: 5rem;
+            color: var(--danger-color);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .error-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .error-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container fade-in">
+        <i class="fas fa-server error-icon"></i>
+        <h1 class="error-title">Facing issues right now</h1>
+        <p class="error-description">
+            Our IT team is currently investigating the issue. Please try again later or contact support if the problem persists.
+        </p>
+        <div class="error-actions">
+            <button class="btn btn-primary" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.reload()">
+                <i class="fas fa-sync-alt"></i> Retry Connection
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Apply theme preference if saved
+        const settings = JSON.parse(localStorage.getItem('bookstore_admin_settings')) || {};
+        if (settings.theme) {
+            document.documentElement.setAttribute('data-theme', settings.theme);
+        }
+    </script>
+</body>
+</html>
