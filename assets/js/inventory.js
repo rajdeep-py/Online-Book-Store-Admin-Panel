@@ -87,7 +87,7 @@
     filteredBooks = books.filter(b => {
       const matchesSearch = b.title.toLowerCase().includes(cleanQuery) || 
                             b.author.toLowerCase().includes(cleanQuery) || 
-                            b.id.toLowerCase().includes(cleanQuery);
+                            String(b.id).toLowerCase().includes(cleanQuery);
       
       let matchesFilter = true;
       if (filter === 'low') matchesFilter = b.stock > 0 && b.stock <= lowStockThreshold;
@@ -148,7 +148,6 @@
             <td>${b.category}</td>
             <td><strong>${formatCurrency(b.price)}</strong></td>
             <td><span class="badge ${badgeType}">${stockLabel}</span></td>
-            <td>${b.isbn || 'N/A'}</td>
             <td>
               <div class="table-actions">
                 <button class="btn btn-secondary btn-sm restock-quick-btn" data-id="${b.id}">
@@ -204,7 +203,17 @@
             }
 
             const newStock = book.stock + qtyToAdd;
-            const result = await BookstoreAPI.updateBook(id, { stock: newStock });
+            const updatedFields = {
+              title: book.title,
+              author: book.author,
+              authorDesc: book.authorDescription || '',
+              category: book.category,
+              price: book.originalPrice || book.price,
+              discount: book.discountPercent || 0,
+              stock: newStock,
+              description: book.description || ''
+            };
+            const result = await BookstoreAPI.updateBook(id, updatedFields);
             if (result) {
               BookstoreAPI.addNotification('stock', 'Inventory Restocked', `Book "${book.title}" stock increased by +${qtyToAdd} units.`);
               showToast(`Successfully added +${qtyToAdd} units to "${book.title}"!`, 'success');

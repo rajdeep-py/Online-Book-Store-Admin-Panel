@@ -222,25 +222,7 @@
               <span class="menu-text">Analytics</span>
             </a>
           </li>
-          <li class="menu-item ${activePage === 'notifications' ? 'active' : ''}">
-            <a href="notifications.html" class="menu-link">
-              <i class="fas fa-bell menu-icon"></i>
-              <span class="menu-text">Notifications</span>
-              <span class="menu-badge" id="sidebar-notif-count">0</span>
-            </a>
-          </li>
-          <li class="menu-item ${activePage === 'settings' ? 'active' : ''}">
-            <a href="settings.html" class="menu-link">
-              <i class="fas fa-cog menu-icon"></i>
-              <span class="menu-text">Settings</span>
-            </a>
-          </li>
-          <li class="menu-item ${activePage === 'profile' ? 'active' : ''}">
-            <a href="profile.html" class="menu-link">
-              <i class="fas fa-user-circle menu-icon"></i>
-              <span class="menu-text">Profile</span>
-            </a>
-          </li>
+
           <li class="menu-item logout-item">
             <a href="#" id="sidebar-logout-btn" class="menu-link">
               <i class="fas fa-sign-out-alt menu-icon"></i>
@@ -271,23 +253,7 @@
         <button class="nav-action-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
           <i class="fas ${settings.theme === 'dark' ? 'fa-sun' : 'fa-moon'}"></i>
         </button>
-        
-        <!-- Notifications Dropdown Trigger -->
-        <div class="nav-dropdown" id="notif-dropdown-wrapper">
-          <button class="nav-action-btn" id="notif-trigger-btn">
-            <i class="fas fa-bell"></i>
-            ${unreadCount > 0 ? `<span class="nav-badge">${unreadCount}</span>` : ''}
-          </button>
-          <div class="dropdown-panel notif-panel" id="notif-panel-content">
-            <div class="dropdown-header">
-              <h4>Notifications</h4>
-              <a href="notifications.html">View All</a>
-            </div>
-            <div class="dropdown-body" id="navbar-notif-list">
-              <!-- Rendered by JS -->
-            </div>
-          </div>
-        </div>
+
         
         <!-- Profile Dropdown Trigger -->
         <div class="nav-dropdown" id="profile-dropdown-wrapper">
@@ -305,9 +271,7 @@
               </div>
             </div>
             <ul class="profile-links">
-              <li><a href="profile.html"><i class="fas fa-user-cog"></i> Edit Profile</a></li>
-              <li><a href="settings.html"><i class="fas fa-sliders-h"></i> Settings</a></li>
-              <li class="divider"></li>
+
               <li><a href="#" id="navbar-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
           </div>
