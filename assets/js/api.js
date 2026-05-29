@@ -273,9 +273,13 @@
     },
 
     _mapCustomerToFrontend: function (c) {
-      const avatarUrl = c.profile_photo 
-        ? (c.profile_photo.startsWith('http') ? c.profile_photo : `http://localhost:8080/book_store_backend${c.profile_photo}`) 
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(c.full_name)}&background=random&color=fff&size=128`;
+      let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.full_name)}&background=random&color=fff&size=128`;
+      if (c.profile_photo) {
+        if (c.profile_photo.startsWith('http')) avatarUrl = c.profile_photo;
+        else if (c.profile_photo.startsWith('/book_store_backend')) avatarUrl = `http://localhost:8080${c.profile_photo}`;
+        else if (c.profile_photo.startsWith('/')) avatarUrl = `http://localhost:8080/book_store_backend${c.profile_photo}`;
+        else avatarUrl = `http://localhost:8080/book_store_backend/${c.profile_photo}`;
+      }
       return {
         id: c.customer_id,
         name: c.full_name,
@@ -311,6 +315,8 @@
              if (custMap[o.customer_id]) {
                 mOrder.customerName = custMap[o.customer_id].full_name;
                 mOrder.customerEmail = custMap[o.customer_id].email;
+                mOrder.customerPhone = custMap[o.customer_id].phone_number;
+                mOrder.shippingAddress = custMap[o.customer_id].address;
              }
              return mOrder;
           });
@@ -404,7 +410,7 @@
         status: statusMap[o.order_status] || o.order_status,
         paymentMethod: 'Cash on Delivery',
         items: mappedItems,
-        shippingAddress: 'Registered Customer Address',
+        shippingAddress: o.shippingAddress || 'Address not provided',
         trackingNumber: o.order_status === 'SHIPPED' ? 'TRK849302948' : null,
         rawItems: o.items_ordered,
         taxCharges: o.tax_charges,

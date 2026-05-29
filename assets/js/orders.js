@@ -96,7 +96,7 @@
     const cleanQuery = query.toLowerCase().trim();
 
     filteredOrders = orders.filter(o => {
-      const matchesSearch = o.id.toLowerCase().includes(cleanQuery) || 
+      const matchesSearch = o.id.toString().toLowerCase().includes(cleanQuery) || 
                             o.customerName.toLowerCase().includes(cleanQuery) || 
                             o.customerEmail.toLowerCase().includes(cleanQuery);
       const matchesTab = tabStatus === 'all' || o.status.toLowerCase() === tabStatus.toLowerCase();
@@ -215,7 +215,7 @@
     if (cEmail) cEmail.textContent = order.customerEmail;
 
     const cPhone = document.getElementById('customer-details-phone');
-    if (cPhone) cPhone.textContent = c ? c.phone : 'N/A';
+    if (cPhone) cPhone.textContent = order.customerPhone || (c ? c.phone : 'N/A');
 
     const cLink = document.getElementById('customer-details-profile-link');
     if (cLink && c) cLink.href = `customer-details.html?id=${c.id}`;
@@ -253,7 +253,19 @@
 
     // Totals summaries
     const oSubtotal = document.getElementById('order-summary-subtotal');
-    if (oSubtotal) oSubtotal.textContent = formatCurrency(order.amount);
+    if (oSubtotal) {
+       const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+       oSubtotal.textContent = formatCurrency(subtotal);
+    }
+    
+    const oDelivery = document.getElementById('order-summary-delivery');
+    if (oDelivery) oDelivery.textContent = formatCurrency(order.deliveryFee || 0);
+
+    const oPlatform = document.getElementById('order-summary-platform');
+    if (oPlatform) oPlatform.textContent = formatCurrency(order.platformFee || 0);
+    
+    const oTax = document.getElementById('order-summary-tax');
+    if (oTax) oTax.textContent = formatCurrency(order.taxCharges || 0);
 
     const oTotal = document.getElementById('order-summary-total');
     if (oTotal) oTotal.textContent = formatCurrency(order.amount);
