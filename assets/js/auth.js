@@ -25,10 +25,12 @@
 
         if (response.ok) {
           let adminId = 1; // Default ID if not returned
+          let sessionId = null;
           try {
             const data = await response.json();
             if (data && data.admin_id) adminId = data.admin_id;
             else if (data && data.id) adminId = data.id;
+            if (data && data.session_id) sessionId = data.session_id;
           } catch (e) {
             // Not JSON
           }
@@ -36,6 +38,9 @@
           const storage = rememberMe ? localStorage : sessionStorage;
           storage.setItem(SESSION_KEY, 'active');
           storage.setItem('admin_id', adminId);
+          if (sessionId) {
+            storage.setItem('bookheaven_admin_session_id', sessionId);
+          }
           
           // Log activity
           if (window.BookstoreAPI) {
@@ -59,6 +64,8 @@
     logout: function () {
       sessionStorage.removeItem(SESSION_KEY);
       localStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem('bookheaven_admin_session_id');
+      localStorage.removeItem('bookheaven_admin_session_id');
       window.location.href = 'login.html';
     },
 

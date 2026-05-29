@@ -23,10 +23,10 @@
   // ==========================================================================
   // ORDERS LISTINGS CONTROLLER (orders.html)
   // ==========================================================================
-  function initializeOrdersListView() {
+  async function initializeOrdersListView() {
     if (!window.BookstoreAPI) return;
 
-    const orders = BookstoreAPI.getOrders();
+    const orders = await BookstoreAPI.getOrders();
     filteredOrders = [...orders];
 
     const searchInput = document.getElementById('order-search');
@@ -91,8 +91,8 @@
     }
   }
 
-  function applyFiltersAndSearch(query, tabStatus) {
-    const orders = BookstoreAPI.getOrders();
+  async function applyFiltersAndSearch(query, tabStatus) {
+    const orders = await BookstoreAPI.getOrders();
     const cleanQuery = query.toLowerCase().trim();
 
     filteredOrders = orders.filter(o => {
@@ -173,7 +173,7 @@
   // ==========================================================================
   // SINGLE ORDER DETAILS CONTROLLER (order-details.html)
   // ==========================================================================
-  function initializeOrderDetailsView() {
+  async function initializeOrderDetailsView() {
     if (!window.BookstoreAPI) return;
 
     // Get order ID from parameters
@@ -186,7 +186,7 @@
       return;
     }
 
-    const order = BookstoreAPI.getOrderById(orderId);
+    const order = await BookstoreAPI.getOrderById(orderId);
     if (!order) {
       showToast('Requested transaction details not found!', 'danger');
       setTimeout(() => { window.location.href = 'orders.html'; }, 1000);
@@ -207,7 +207,7 @@
     }
 
     // 2. Populate Customer Card Info
-    const c = BookstoreAPI.getCustomers().find(cust => cust.id === order.customerId);
+    const c = (await BookstoreAPI.getCustomers()).find(cust => cust.id === order.customerId);
     const cName = document.getElementById('customer-details-name');
     if (cName) cName.textContent = order.customerName;
 
@@ -329,8 +329,8 @@
           id: 'confirm',
           label: 'Proceed',
           type: btnType,
-          callback: (close) => {
-            BookstoreAPI.updateOrderStatus(id, nextStatus);
+          callback: async (close) => {
+            await BookstoreAPI.updateOrderStatus(id, nextStatus);
             
             // Log notify
             BookstoreAPI.addNotification(

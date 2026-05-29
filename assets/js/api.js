@@ -55,6 +55,11 @@
       return `http://localhost:8080/book_store_backend/${coverPath}`;
     },
 
+    _getSessionUrl: function (url) {
+      const sessionId = sessionStorage.getItem('bookheaven_admin_session_id') || localStorage.getItem('bookheaven_admin_session_id');
+      return sessionId ? `${url};jsessionid=${sessionId}` : url;
+    },
+
     // ------------------------------------------------------------------------
     // 📚 BOOKS INVENTORY ENDPOINTS
     // ------------------------------------------------------------------------
@@ -63,7 +68,7 @@
         const url = query 
           ? `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}?q=${encodeURIComponent(query)}` 
           : `${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}`;
-        const response = await fetch(url, { credentials: 'include' });
+        const response = await fetch(this._getSessionUrl(url), { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           const items = data.items || data;
@@ -79,7 +84,7 @@
 
     getBookById: async function (id) {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`, { credentials: 'include' });
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`), { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           return this._mapBookToFrontend(data);
@@ -107,7 +112,7 @@
           formData.append('book_photo', book.coverFile);
         }
 
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}`, {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}`), {
           method: 'POST',
           body: formData,
           credentials: 'include'
@@ -140,7 +145,7 @@
           formData.append('book_photo', updatedFields.coverFile);
         }
 
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`, {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`), {
           method: 'PUT',
           body: formData,
           credentials: 'include'
@@ -158,7 +163,7 @@
 
     deleteBook: async function (id) {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`, {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.BOOKS}/${id}`), {
           method: 'DELETE',
           credentials: 'include'
         });
@@ -195,11 +200,26 @@
     // ------------------------------------------------------------------------
     getCustomers: async function () {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}`, { credentials: 'include' });
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}`), { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           const items = data.items || data;
-          const mapped = items.map(c => this._mapCustomerToFrontend(c));
+          
+          // Also fetch orders for calculation
+          const ordersResponse = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}`), { credentials: 'include' });
+          let allOrders = [];
+          if (ordersResponse.ok) {
+             const oData = await ordersResponse.json();
+             allOrders = oData.items || [];
+          }
+
+          const mapped = items.map(c => {
+             const mappedCustomer = this._mapCustomerToFrontend(c);
+             const custOrders = allOrders.filter(o => o.customer_id === c.customer_id);
+             mappedCustomer.ordersCount = custOrders.length;
+             mappedCustomer.totalSpent = custOrders.reduce((sum, o) => sum + (o.total_bill_amount || 0), 0);
+             return mappedCustomer;
+          });
           setDBItem('customers', mapped);
           return mapped;
         }
@@ -211,7 +231,7 @@
 
     getCustomerById: async function (id) {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}/${id}`, { credentials: 'include' });
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}/${id}`), { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           return this._mapCustomerToFrontend(data);
@@ -237,7 +257,7 @@
           formData.append('password', updatedFields.password);
         }
 
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}/${id}`, {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}/${id}`), {
           method: 'PUT',
           body: formData,
           credentials: 'include'
@@ -274,11 +294,26 @@
     // ------------------------------------------------------------------------
     getOrders: async function () {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}`, { credentials: 'include' });
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}`), { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           const items = data.items || data;
-          const mapped = items.map(o => this._mapOrderToFrontend(o));
+          
+          const custResponse = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CUSTOMERS}`), { credentials: 'include' });
+          let custMap = {};
+          if (custResponse.ok) {
+             const cData = await custResponse.json();
+             (cData.items || []).forEach(c => { custMap[c.customer_id] = c; });
+          }
+
+          const mapped = items.map(o => {
+             const mOrder = this._mapOrderToFrontend(o);
+             if (custMap[o.customer_id]) {
+                mOrder.customerName = custMap[o.customer_id].full_name;
+                mOrder.customerEmail = custMap[o.customer_id].email;
+             }
+             return mOrder;
+          });
           setDBItem('orders', mapped);
           return mapped;
         }
@@ -290,7 +325,7 @@
 
     getOrderById: async function (id) {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}/${id}`, { credentials: 'include' });
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}/${id}`), { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           return this._mapOrderToFrontend(data);
@@ -304,10 +339,26 @@
 
     updateOrderStatus: async function (id, status) {
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}/${id}`, {
+        const getRes = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}/${id}`), { credentials: 'include' });
+        if (!getRes.ok) return false;
+        const rawOrder = await getRes.json();
+
+        const backendStatusMap = {
+          'Pending': 'PLACED',
+          'Confirmed': 'PROCESSING',
+          'Dispatched': 'SHIPPED',
+          'Delivered': 'DELIVERED',
+          'Cancelled': 'CANCELLED'
+        };
+        
+        rawOrder.order_status = backendStatusMap[status] || status;
+        rawOrder.items = rawOrder.items_ordered || [];
+        rawOrder.customer_id = rawOrder.customer_id || 0;
+        
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ORDERS}/${id}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ order_status: status }),
+          body: JSON.stringify(rawOrder),
           credentials: 'include'
         });
         if (response.ok) {
@@ -335,6 +386,14 @@
         quantity: item.quantity
       }));
 
+      const statusMap = {
+        'PLACED': 'Pending',
+        'PROCESSING': 'Confirmed',
+        'SHIPPED': 'Dispatched',
+        'DELIVERED': 'Delivered',
+        'CANCELLED': 'Cancelled'
+      };
+      
       return {
         id: o.order_id,
         customerId: o.customer_id,
@@ -342,11 +401,15 @@
         customerEmail: `customer${o.customer_id}@example.com`,
         date: o.created_at ? o.created_at.split(' ')[0] : new Date().toISOString().split('T')[0],
         amount: o.total_bill_amount,
-        status: o.order_status,
-        paymentMethod: 'Credit Card',
+        status: statusMap[o.order_status] || o.order_status,
+        paymentMethod: 'Cash on Delivery',
         items: mappedItems,
         shippingAddress: 'Registered Customer Address',
-        trackingNumber: o.order_status === 'Dispatched' ? 'TRK849302948' : null
+        trackingNumber: o.order_status === 'SHIPPED' ? 'TRK849302948' : null,
+        rawItems: o.items_ordered,
+        taxCharges: o.tax_charges,
+        platformFee: o.platform_fee,
+        deliveryFee: o.delivery_fee
       };
     },
 
@@ -397,7 +460,7 @@
     getAdminProfile: async function () {
       const adminId = sessionStorage.getItem('admin_id') || localStorage.getItem('admin_id') || 1;
       try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`, {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`), {
           method: 'GET',
           credentials: 'include'
         });
@@ -441,7 +504,7 @@
           payload.admin_password = profileData.password;
         }
 
-        const response = await fetch(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`, {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.ADMIN_PROFILE}/${adminId}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

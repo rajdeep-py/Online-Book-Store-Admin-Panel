@@ -22,10 +22,10 @@
   // ==========================================================================
   // CUSTOMER LISTINGS PAGE CONTROLLERS (customers.html)
   // ==========================================================================
-  function initializeCustomersListView() {
+  async function initializeCustomersListView() {
     if (!window.BookstoreAPI) return;
 
-    const customers = BookstoreAPI.getCustomers();
+    const customers = await BookstoreAPI.getCustomers();
     filteredCustomers = [...customers];
 
     const searchInput = document.getElementById('customer-search');
@@ -79,8 +79,8 @@
     }
   }
 
-  function applyFiltersAndSearch(query, status) {
-    const customers = BookstoreAPI.getCustomers();
+  async function applyFiltersAndSearch(query, status) {
+    const customers = await BookstoreAPI.getCustomers();
     const cleanQuery = query.toLowerCase().trim();
 
     filteredCustomers = customers.filter(c => {
@@ -175,9 +175,9 @@
     }
   }
 
-  function toggleCustomerStatus(id) {
+  async function toggleCustomerStatus(id) {
     if (!window.BookstoreAPI) return;
-    const customer = BookstoreAPI.getCustomerById(id);
+    const customer = await BookstoreAPI.getCustomerById(id);
     if (!customer) return;
 
     const newStatus = customer.status === 'Active' ? 'Suspended' : 'Active';
@@ -215,7 +215,7 @@
   // ==========================================================================
   // CUSTOMER PROFILE VIEW CONTROLLERS (customer-details.html)
   // ==========================================================================
-  function initializeCustomerDetailsView() {
+  async function initializeCustomerDetailsView() {
     if (!window.BookstoreAPI) return;
 
     // Get customer ID from url query
@@ -228,7 +228,7 @@
       return;
     }
 
-    const customer = BookstoreAPI.getCustomerById(custId);
+    const customer = await BookstoreAPI.getCustomerById(custId);
     if (!customer) {
       showToast('Requested customer was not found in systems!', 'danger');
       setTimeout(() => { window.location.href = 'customers.html'; }, 1000);
@@ -261,14 +261,16 @@
     }
 
     // Quick metric tags
+    const custOrders = (await BookstoreAPI.getOrders()).filter(o => o.customerId === customer.id);
+    const totalSpent = custOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
+    
     const cSpent = document.getElementById('details-spent');
-    if (cSpent) cSpent.textContent = formatCurrency(customer.totalSpent);
+    if (cSpent) cSpent.textContent = formatCurrency(totalSpent);
 
     const cCount = document.getElementById('details-orders-count');
-    if (cCount) cCount.textContent = customer.ordersCount;
+    if (cCount) cCount.textContent = custOrders.length;
 
     // 2. Fetch Customer historical orders
-    const custOrders = BookstoreAPI.getOrders().filter(o => o.customerId === customer.id);
     const ordersBody = document.getElementById('customer-orders-table-body');
     if (ordersBody) {
       if (custOrders.length === 0) {

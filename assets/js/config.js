@@ -4,8 +4,8 @@ const CONFIG = {
     ADMIN_LOGIN: '/auth/admin-login',
     ADMIN_PROFILE: '/api/admins', // Append /{id} dynamically
     BOOKS: '/api/books',
-    CUSTOMERS: '/api/customers',
-    ORDERS: '/api/orders',
+    CUSTOMERS: '/api/admin/customers',
+    ORDERS: '/api/admin/orders',
     CHARGES: '/api/charges',
     ABOUT: '/api/about',
     CONTACTS: '/api/contacts'
