@@ -81,6 +81,8 @@
     document.getElementById('company-description').value = data.company_description || '';
     document.getElementById('company-mission').value = data.mission || '';
     document.getElementById('company-vision').value = data.vision || '';
+    document.getElementById('director-name').value = data.director_name || '';
+    document.getElementById('director-message').value = data.director_message || '';
     document.getElementById('company-phone').value = data.phone_no || '';
     document.getElementById('company-email').value = data.email_id || '';
     document.getElementById('company-address').value = data.address || '';
@@ -166,6 +168,8 @@
       company_description: document.getElementById('company-description').value,
       mission: document.getElementById('company-mission').value,
       vision: document.getElementById('company-vision').value,
+      director_name: document.getElementById('director-name').value,
+      director_message: document.getElementById('director-message').value,
       phone_no: document.getElementById('company-phone').value,
       email_id: document.getElementById('company-email').value,
       address: document.getElementById('company-address').value,
