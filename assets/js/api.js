@@ -644,6 +644,48 @@
           Cancelled: allOrders.filter(o => o.status === 'Cancelled').length
         }
       };
+    },
+
+    // ------------------------------------------------------------------------
+    // 📧 WEBSITE ENQUIRIES
+    // ------------------------------------------------------------------------
+    getEnquiries: async function () {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CONTACTS}`), {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          return data.items || [];
+        } else {
+          this._handleFetchError(new Error(`Failed to fetch enquiries: ${response.statusText}`));
+        }
+      } catch (error) {
+        this._handleFetchError(error);
+      }
+    },
+    
+    updateEnquiryStatus: async function (id, status) {
+      try {
+        const response = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CONTACTS}/${id}`), {
+          credentials: 'include'
+        });
+        if (!response.ok) this._handleFetchError(new Error(`Failed to fetch enquiry: ${response.statusText}`));
+        const rawEnquiry = await response.json();
+        
+        rawEnquiry.status = status;
+        
+        const updateResponse = await fetch(this._getSessionUrl(`${CONFIG.API_BASE_URL}${CONFIG.ENDPOINTS.CONTACTS}/${id}`), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(rawEnquiry),
+          credentials: 'include'
+        });
+        if (updateResponse.ok) return true;
+        this._handleFetchError(new Error(`Failed to update enquiry status: ${updateResponse.statusText}`));
+      } catch (error) {
+        this._handleFetchError(error);
+      }
     }
   };
 })();
