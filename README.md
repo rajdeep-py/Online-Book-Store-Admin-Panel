@@ -92,6 +92,16 @@ Handles reusable interface interactions:
 
 ---
 
+## 🚀 Running the Frontend Locally (Windows & macOS)
+
+> ⚠️ **IMPORTANT**: Do **NOT** open `index.html` by double-clicking the file in your file explorer! Doing so will open the site using the `file:///` protocol, which causes modern browsers to block API requests and 3D model loads due to strict **CORS** security policies.
+
+To run the Admin Panel correctly:
+1. Open the `Online-Book-Store-Admin-Panel` folder in **Visual Studio Code**.
+2. Install the **"Live Server"** extension (by Ritwick Dey) from the VS Code Extensions panel.
+3. Right-click on `index.html` (or `login.html`) and select **"Open with Live Server"**.
+4. The panel will open in your browser at `http://127.0.0.1:5500`, bypassing all CORS and file protocol restrictions so it can freely talk to the Java backend!
+
 ## 6. Developer Team
 
 - **Raj** - *Head of Curation*
